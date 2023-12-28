@@ -1,13 +1,13 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import MainLayout from "../MainLayout";
+import FilterSearch from "../Components/FilterSearch";
 
 
 export default function Home() {
 
     return (
-        <div>
-            home
-            <Link to="/detail">detail</Link>
-        </div>
+        <MainLayout>
+           <FilterSearch/>
+        </MainLayout>
     )
 }
