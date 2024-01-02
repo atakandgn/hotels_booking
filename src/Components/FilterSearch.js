@@ -34,7 +34,7 @@ export default function FilterSearch() {
         console.log("Bitiş Tarihi:", endDate);
     };
     return (
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid xl:grid-cols-5 lg:grid-cols-4 gap-4 md:grid-cols-3 sm:grid-cols-2">
             <Select label="Varış Noktası" className="w-full">
                 <Option value="1">İstanbul</Option>
                 <Option value="2">Ankara</Option>
