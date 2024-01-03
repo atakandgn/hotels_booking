@@ -54,7 +54,7 @@ export function ProductCardHorizontal() {
                             <span className="text-2xl font-bold"> 1.500 TL</span>
                         </div>
                         <Typography color="gray" variant="h6" className="text-right ">
-                            1 gece için vergiler ve ücretler dahildir.
+                            The price includes taxes and fees for one night.
                         </Typography>
                     </div>
                     <CustomButton text="Detayları Gör" color="lightBlue" variant="filled" size="sm" link="/product/1"/>

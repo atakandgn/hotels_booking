@@ -1,7 +1,10 @@
 import React, {useState,useEffect} from 'react';
-import {Select, Option, IconButton, Input} from "@material-tailwind/react";
+import {Select, Option, Input} from "@material-tailwind/react";
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import CitySelect from "./CitySelect";
+import countriesData from "../countries+states+cities.json";
+import {CustomButton} from "./CustomButton";
 
 export default function FilterSearch() {
     const [startDate, setStartDate] = useState(null);
@@ -34,14 +37,9 @@ export default function FilterSearch() {
         console.log("Bitiş Tarihi:", endDate);
     };
     return (
-        <div className="grid xl:grid-cols-5 lg:grid-cols-4 gap-4 md:grid-cols-3 sm:grid-cols-2">
-            <Select label="Varış Noktası" className="w-full">
-                <Option value="1">İstanbul</Option>
-                <Option value="2">Ankara</Option>
-                <Option value="3">İzmir</Option>
-                <Option value="4">Antalya</Option>
-            </Select>
-            <div>
+        <div className="flex lg:flex-row flex-col gap-2">
+            <div className="w-full grid grid-cols-2 gap-2">
+                <CitySelect data={countriesData} variant={"outlined"}/>
                 <Input
                     label="Select a Date"
                     id="datePicker"
@@ -49,22 +47,29 @@ export default function FilterSearch() {
                     placeholder="Tarih Aralığı"
                 />
             </div>
-            <Select label="Misafir Sayısı" className="w-full">
-                <Option value="1">1</Option>
-                <Option value="2">2</Option>
-                <Option value="3">3</Option>
-                <Option value="4">4</Option>
-            </Select>
-            <Select label="Oda Sayısı" className="w-full">
-                <Option value="1">1</Option>
-                <Option value="2">2</Option>
-                <Option value="3">3</Option>
-                <Option value="4">4</Option>
-            </Select>
-            <IconButton variant="text" className="flex items-center justify-center w-full" onClick={handleSearch}>
-                <i className="fas fa-search mr-2" />
-                <span>Ara</span>
-            </IconButton>
+            <div className="flex flex-row gap-2 w-full">
+                <Select label="Misafir Sayısı" className="w-full">
+                    <Option value="1">1</Option>
+                    <Option value="2">2</Option>
+                    <Option value="3">3</Option>
+                    <Option value="4">4</Option>
+                    <Option value="5">5</Option>
+                    <Option value="6">6</Option>
+                    <Option value="7">7</Option>
+                    <Option value="8">8</Option>
+                </Select>
+                <Select label="Oda Sayısı" className="w-full">
+                    <Option value="1">1</Option>
+                    <Option value="2">2</Option>
+                    <Option value="3">3</Option>
+                    <Option value="4">4</Option>
+                    <Option value="5">5</Option>
+                </Select>
+            </div>
+            <div>
+
+            </div>
+            <CustomButton text="Search" color="" variant="filled" size="md" onClick={handleSearch}/>
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Select, Option } from '@material-tailwind/react';
 
-const CitySelect = ({ data }) => {
+const CitySelect = ({ data ,variant="standard"}) => {
     const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState('');
@@ -25,7 +25,7 @@ const CitySelect = ({ data }) => {
         <div className="flex flex-col gap-2">
             {/*name of country */}
             <Select
-                variant="standard"
+                variant={variant}
                 value={selectedCountry}
                 onChange={(e) => handleCountryChange(e)}
                 label="Choose a country"
@@ -40,7 +40,7 @@ const CitySelect = ({ data }) => {
             {/*city name */}
             {selectedCountry && (
                 <Select
-                    variant="standard"
+                    variant={variant}
                     value={selectedCity}
                     onChange={(e) => handleCityChange(e)}
                     label="Choose a state"
@@ -58,7 +58,7 @@ const CitySelect = ({ data }) => {
             {/*district name*/}
             {selectedCity && (
                 <Select
-                    variant="standard"
+                    variant={variant}
                     value={selectedDistrict}
                     onChange={(e) => handleDistrictChange(e)}
                     label="Choose a city"

@@ -91,7 +91,7 @@ export default function ProductCard() {
                                             </div>
 
                                             <Typography color="gray" variant="h6" className="text-start text-[12px]">
-                                                1 gece için vergiler ve ücretler dahildir.
+                                                The price includes taxes and fees for one night.
                                             </Typography>
                                         </div>
 
