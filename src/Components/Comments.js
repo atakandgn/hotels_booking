@@ -53,9 +53,12 @@ const CommentsCarousel = () => {
     const settings = {
         dots: true,
         infinite: true,
-        speed: 500,
+        speed: 1000,
         slidesToShow: 2,
         slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 5000,
+        pauseOnHover: true,
         responsive: [
             {
                 breakpoint: 1024,
@@ -65,54 +68,52 @@ const CommentsCarousel = () => {
             },
         ]
     };
-
-
     return (
-        <Slider {...settings} className="w-full overflow-hidden">
-            {commentsData.map((comment, index) => (
-                <div className="p-4" key={index}>
-                    <div className="mb-4">
-                        <div className="min-h-[170px] max-h-[170px] shadow-md bg-white p-4 border rounded-md cursor-pointer">
-                            <div className="flex justify-between items-center mb-6">
-                                <div className="flex items-center gap-1.5">
-                                    <Avatar src={comment?.avatarSrc ? comment.avatarSrc : "https://static.vecteezy.com/system/resources/previews/024/183/502/original/male-avatar-portrait-of-a-young-man-with-a-beard-illustration-of-male-character-in-modern-color-style-vector.jpg"
-                                    } alt="avatar" variant="rounded"/>
-                                    <div className="flex flex-col">
-                                        <strong className="text-gray-800 text-lg">{comment?.name}</strong>
-                                        <span className="text-gray-600 text-sm">{comment?.username}</span>
+            <Slider {...settings} className="w-full sm:overflow-visible">
+                {commentsData.map((comment, index) => (
+                    <div className="p-4" key={index}>
+                        <div className="mb-4">
+                            <div className="min-h-[170px] max-h-[180px] shadow-md bg-white p-4 border rounded-md cursor-pointer">
+                                <div className="flex justify-between items-center mb-6">
+                                    <div className="flex items-center gap-1.5">
+                                        <Avatar src={comment?.avatarSrc ? comment.avatarSrc : "https://static.vecteezy.com/system/resources/previews/024/183/502/original/male-avatar-portrait-of-a-young-man-with-a-beard-illustration-of-male-character-in-modern-color-style-vector.jpg"
+                                        } alt="avatar" variant="rounded"/>
+                                        <div className="flex flex-col">
+                                            <strong className="text-gray-800 text-lg">{comment?.name}</strong>
+                                            <span className="text-gray-600 text-sm">{comment?.username}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex text-yellow-500">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <StarIcon
+                                                key={star}
+                                                className={`h-5 w-5 ${star <= comment.rating ? 'text-yellow-500' : 'text-gray-300'}`}
+                                            />
+                                        ))}
                                     </div>
                                 </div>
-                                <div className="flex text-yellow-500">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <StarIcon
-                                            key={star}
-                                            className={`h-5 w-5 ${star <= comment.rating ? 'text-yellow-500' : 'text-gray-300'}`}
-                                        />
-                                    ))}
-                                </div>
+                                <Tooltip
+                                    placement="bottom"
+                                    className="border border-blue-gray-50 bg-white px-4 py-3 shadow-xl shadow-black/10"
+                                    content={
+                                        <div className="w-80">
+                                            <Typography
+                                                variant="small"
+                                                color="blue-gray"
+                                                className="font-normal opacity-80"
+                                            >
+                                                {comment.comment}
+                                            </Typography>
+                                        </div>
+                                    }
+                                >
+                                    <p className="text-gray-700 text-sm text-truncate-3">{comment.comment}</p>
+                                </Tooltip>
                             </div>
-                            <Tooltip
-                                placement="bottom"
-                                className="border border-blue-gray-50 bg-white px-4 py-3 shadow-xl shadow-black/10"
-                                content={
-                                    <div className="w-80">
-                                        <Typography
-                                            variant="small"
-                                            color="blue-gray"
-                                            className="font-normal opacity-80"
-                                        >
-                                            {comment.comment}
-                                        </Typography>
-                                    </div>
-                                }
-                            >
-                                <p className="text-gray-700 text-sm text-truncate-3">{comment.comment}</p>
-                            </Tooltip>
                         </div>
                     </div>
-                </div>
-            ))}
-        </Slider>
+                ))}
+            </Slider>
     );
 };
 

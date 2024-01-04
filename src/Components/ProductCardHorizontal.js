@@ -39,7 +39,7 @@ export function ProductCardHorizontal() {
                         </div>
                     </div>
 
-                    <Typography variant="paragraph" color="gray" className="text-sm bg-gray-50 p-2 h-full flex items-center">
+                    <Typography variant="paragraph" color="gray" className="text-sm bg-gray-50/10 p-2 h-full flex items-center">
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquid at aut corporis culpa,
                         deserunt dolor enim error excepturi fugiat impedit nobis numquam obcaecati officiis quasi
                         quisquam repudiandae similique velit.

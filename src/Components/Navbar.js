@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Input, Typography} from "@material-tailwind/react";
 import {Modal} from "./Modal";
 import {CustomButton} from "./CustomButton";
 import CitySelect from './CitySelect';
 import countriesData from '../countries+states+cities.json';
 import {Link} from "react-router-dom";
+import {Drawler} from "./Drawler";
 
 export default function Navbar() {
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -31,6 +32,8 @@ export default function Navbar() {
         setIsRegisterModalOpen(!isRegisterModalOpen);
         setIsLoginModalOpen(!isLoginModalOpen);
     };
+
+
     return (
         <div className="flex justify-between items-center w-full h-[100px] bg-slate-100 px-12">
             <Link to="/">
@@ -38,13 +41,13 @@ export default function Navbar() {
                      src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Hotels.com_logo.svg/2560px-Hotels.com_logo.svg.png"
                      alt=""/>
             </Link>
-            <div className="flex items-center">
-                <div>
+            <div className="flex items-center gap-4">
+                <div className="flex gap-4 items-center">
                     <Button onClick={openLoginModal}>Sign In</Button>
-                </div>
-                <div className="ml-4">
                     <Button onClick={openRegisterModal}>Sign Up</Button>
                 </div>
+                <Drawler/>
+
             </div>
             <Modal
                 size={"xs"}
