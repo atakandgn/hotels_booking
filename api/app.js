@@ -1,34 +1,30 @@
 // app.js
 const express = require('express');
-const sql = require('mssql');
+const sql = require('mysql');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const {sequelize, initializeSequelize} = require("./helpers/sequelize");
-const {Admin, Patients, Occupations} = require("./helpers/sequelizemodels");
-const {Op, literal} = require("sequelize");
 const cors = require('cors');
-const Joi = require('joi');
-const bcrypt = require('bcrypt');
-
-const jwt = require('jsonwebtoken');
 const sass = require('node-sass');
 const path = require('path');
-
-
-require('dotenv').config();
+require('dotenv').config({path: './config/.env'});
 const app = express();
+app.use(cors());
+app.use(express.json())
 const port = 5000;
-
 app.use(express.static(path.join(__dirname, 'public')));
+
+const authRoutes = require('./routes/authRoutes');
+const hotelRoutes = require('./routes/hotelRoutes');
+
+app.use(authRoutes);
+app.use(hotelRoutes);
 
 
 // Start the server
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
-app.use(cors());
-app.use(express.json());
+
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -313,7 +309,7 @@ const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Healtcare PRO',
+            title: 'Hotels Booking API',
             version: '1.0.0',
             description: 'API for an hotels booking system',
             contact: {
@@ -331,246 +327,6 @@ const swaggerSpec = swaggerJSDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
-// Authentication Middleware
-const authenticateToken = (req, res, next) => {
-    const token = req.header('Authorization');
-
-    if (!token) {
-        return res.status(401).send('Authentication failed. Token not provided or invalid.');
-    }
-
-    try {
-        const decoded = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET_KEY);
-        req.user = decoded;
-        next();
-    } catch (error) {
-        console.error('Authentication Error:', error);
-        return res.status(401).send('Authentication failed. Invalid token.');
-    }
-}
-
-/**
- * @swagger
- * components:
- *   securitySchemes:
- *     bearerAuth:
- *          type: http
- *          scheme: bearer
- *          bearerFormat: JWT
- *          in: header
- *          name: Authorization
- *          description: JWT token for authentication
- */
 
 
 
-/**
- * @swagger
- * /login:
- *   post:
- *     summary: Authenticate and generate a JWT token for admin login.
- *     description: |
- *       This endpoint allows administrators to authenticate by providing a username and password.
- *       Upon successful authentication, a JWT token is generated and returned in the response.
- *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *                 description: The username of the administrator.
- *               password:
- *                 type: string
- *                 description: The password of the administrator.
- *     responses:
- *       '200':
- *         description: Successful login. Returns a JWT token.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   description: JWT token for authentication.
- *       '401':
- *         description: Invalid username or password.
- *       '500':
- *         description: Internal server error during login.
- */
-
-app.post('/login', async (req, res) => {
-    try {
-        const {username, password} = req.body;
-
-        const sequelize = await initializeSequelize();
-        const adminModel = sequelize.define('admin', Admin, {
-            timestamps: false,
-            freezeTableName: true,
-        });
-
-        // Check if the admin exists
-        const adminUser = await adminModel.findOne({
-            where: {
-                username,
-            },
-        });
-
-        if (!adminUser) {
-            return res.status(401).send('Invalid username or password');
-        }
-
-        // Check if the password is correct
-        const isPasswordValid = await bcrypt.compare(password, adminUser.password);
-        if (!isPasswordValid) {
-            return res.status(401).send('Invalid username or password');
-        }
-
-        // Generate JWT token
-        const tokenPayload = {
-            id: adminUser.id,
-            username: adminUser.username,
-            name: adminUser.name,
-            surname: adminUser.surname,
-            email: adminUser.email,
-            phone: adminUser.phone,
-            occupation_id: adminUser.occupation_id,
-            adminID: adminUser.adminID,
-        };
-        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY);
-
-        // Send the token in the response
-        return res.status(200).json({token});
-    } catch (error) {
-        console.error('Error:', error);
-        return res.status(500).send('Internal server error during login.');
-    }
-});
-
-// Register Swagger Documentation
-/**
- * @swagger
- * /register:
- *   post:
- *     summary: Register a new admin.
- *     description: |
- *       This endpoint allows administrators to register a new account by providing required information.
- *       The provided password is hashed before being stored.
- *     tags:
- *       - POST Methods
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *                 description: The desired username for the new admin.
- *               name:
- *                 type: string
- *                 description: The name of the new admin.
- *               surname:
- *                 type: string
- *                 description: The surname of the new admin.
- *               email:
- *                 type: string
- *                 format: email
- *                 description: The email address of the new admin.
- *               phone:
- *                 type: string
- *                 description: The phone number of the new admin.
- *               password:
- *                 type: string
- *                 description: The password for the new admin.
- *               occupation_id:
- *                 type: integer
- *                 description: The ID of the occupation for the new admin.
- *     responses:
- *       '201':
- *         description: Admin created successfully.
- *       '400':
- *         description: Validation error or duplicate username/email/phone.
- *       '500':
- *         description: Internal server error during registration.
- */
-
-// Register endpoint
-app.post('/register', async (req, res) => {
-    try {
-        const {error, value} = Joi.object({
-            username: Joi.string().alphanum().min(3).max(30).required(),
-            name: Joi.string().required(),
-            surname: Joi.string().required(),
-            email: Joi.string().email().required(),
-            phone: Joi.string().required(),
-            password: Joi.string().min(6).required(),
-            occupation_id: Joi.number().integer().min(1).required(),
-        }).validate(req.body);
-
-        if (error) {
-            return res.status(400).send(`Validation Error: ${error.details[0].message}`);
-        }
-
-        const {username, name, surname, email, phone, password, occupation_id} = value;
-
-        // Hash the password using bcrypt
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const sequelize = await initializeSequelize();
-        const adminModel = sequelize.define('admin', Admin, {
-            timestamps: false,
-            freezeTableName: true,
-        });
-
-
-        // Check if the username, email, or phone already exists
-        const existingUser = await adminModel.findOne({
-            where: {
-                [Op.or]: [
-                    {username},
-                    {email},
-                    {phone},
-                ],
-            },
-        });
-
-        if (existingUser) {
-            if (existingUser.username === username) {
-                return res.status(400).send('Error: Username already exists.');
-            }
-            if (existingUser.email === email) {
-                return res.status(400).send('Error: Email already exists.');
-            }
-            if (existingUser.phone === phone) {
-                return res.status(400).send('Error: Phone already exists.');
-            }
-        }
-
-        // Create a new user
-        const newUser = await adminModel.create({
-            username,
-            name,
-            surname,
-            email,
-            phone,
-            password: hashedPassword,
-            occupation_id
-        });
-
-        if (!newUser) {
-            return res.status(500).send('Registration error occurred. Please try again.');
-        }
-
-        return res.status(201).send('Admin created successfully.');
-    } catch (error) {
-        console.error('Error:', error);
-        return res.status(500).send('Internal server error during registration.');
-    }
-});

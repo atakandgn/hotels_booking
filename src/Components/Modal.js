@@ -3,11 +3,11 @@ import React from "react";
 import PropTypes from 'prop-types';
 import {  Dialog, DialogHeader, DialogBody, DialogFooter } from "@material-tailwind/react";
 
-export function Modal({ header, body, isOpen, onClickFunction, cancelFunction, confirmFunction, size="sm" }) {
+export function Modal({ header, body, isOpen, onClickFunction, long , size="sm" }) {
     return (
         <Dialog open={isOpen} handler={onClickFunction} size={size}>
             <DialogHeader>{header}</DialogHeader>
-            <DialogBody>{body}</DialogBody>
+            <DialogBody className={long ? long : ""}>{body}</DialogBody>
             <DialogFooter>
 
             </DialogFooter>

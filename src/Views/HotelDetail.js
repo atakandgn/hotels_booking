@@ -1,23 +1,70 @@
-import React, {useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import MainLayout from "../MainLayout";
-import {Alert, Chip, Tooltip, Typography} from "@material-tailwind/react";
+import {Alert, Button, Chip, Tooltip, Typography} from "@material-tailwind/react";
 import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {FeaturedImageGallery} from "../Components/ImageGallery";
 import MapContainer from "../Components/MapContainer";
 import CommentsCarousel from "../Components/Comments";
 import MakeComment from "../Components/MakeComment";
+import axios from "axios";
+import {useParams} from "react-router-dom";
+import {getDecodedToken} from "../Components/auth";
+import toast from "react-hot-toast";
 
-
-export default function ProductDetail() {
-    const mapCenter = [40.267093575747516, 14.933098165767607];
+export default function HotelDetail() {
+    const decodedToken = getDecodedToken();
+    const {hotelID} = useParams();
     // ref for comments section
     const commentsRef = useRef(null);
 
     // Function to scroll to the comments section
     const scrollToComments = () => {
         if (commentsRef.current) {
-            commentsRef.current.scrollIntoView({ behavior: "smooth" });
+            commentsRef.current.scrollIntoView({behavior: "smooth"});
         }
+    };
+
+    const [hotelData, setHotelData] = useState();
+
+    useEffect(() => {
+        const getHotelDetail = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/getHotelDetail/${hotelID}`);
+                setHotelData(response.data);
+            } catch (error) {
+                console.error(error?.message);
+            }
+        };
+        getHotelDetail();
+    }, [hotelID]); // Trigger the effect whenever hotelID changes
+
+    const mapCenter = hotelData ? [hotelData.hotel_latitude, hotelData.hotel_longitude] : [0, 0];
+
+    console.log("hotelData", hotelData)
+    const makeTheReservation = async (rating, comment) => {
+        return new Promise((resolve, reject) => {
+            // Add your actual save comment logic here
+            // For now, let's just simulate success
+            setTimeout(() => {
+                resolve("Comment sent successfully!");
+            }, 1000);
+        });
+    };
+
+    const makeReservation = () => {
+        toast.promise(
+            new Promise((resolve) => {
+                setTimeout(() => {
+                    // Simulate a successful reservation after a delay
+                    resolve("Reservation is made successfully!");
+                }, 1000);
+            }),
+            {
+                loading: 'Making Reservation...',
+                success: <b>Reservation is made successfully!</b>,
+                error: <b>Something went wrong!</b>,
+            }
+        );
     };
 
     return (
@@ -27,16 +74,10 @@ export default function ProductDetail() {
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col gap-2">
                             <Typography variant="h3" color="blue-gray">
-                                Holiday Inn Resort Bodrum, bir IHG Hotel
+                                {hotelData?.hotel_name}
                             </Typography>
                             <Typography variant="h6" color="gray">
-                                Holiday Inn Resort Bodrum, located in the Zeytinlikahve area, one of the most beautiful
-                                bays in Bodrum, offers guests a unique holiday experience with its beachfront location.
-                                The hotel has its own beach and pier. There is one outdoor swimming pool and one indoor
-                                swimming pool at the hotel. Additionally, there is a children's pool for the younger
-                                guests. Throughout your stay at the hotel, you can enjoy a fitness center and tennis
-                                court for sports activities. The hotel's SPA center provides sauna, Turkish bath, and
-                                massage services.
+                                {hotelData?.hotel_description}
                             </Typography>
                         </div>
 
@@ -47,13 +88,12 @@ export default function ProductDetail() {
 
                         <Typography variant="small" color="indigo" onClick={scrollToComments}
                                     className="flex items-center hover:text-indigo-300 hover:scale-105 w-max cursor-pointer transition duration-200">
-                            See all 3 reviews
+                            See all {hotelData?.hotel_comments} reviews
                             <ChevronRightIcon className="w-5 h-5"/>
                         </Typography>
                         {/*Hotel Features*/}
                         <div className="flex items-center gap-2 flex-wrap">
                             <Typography variant="h4" color="blue-gray">Hotel Features:</Typography>
-
                             <Tooltip content="Havuzlu Otel">
                                 <i className="fa-solid fa-lg fa-water-ladder cursor-pointer"></i>
                             </Tooltip>
@@ -87,17 +127,49 @@ export default function ProductDetail() {
                             <Tooltip content="Jakuzi">
                                 <i className="fa-solid fa-lg fa-hot-tub cursor-pointer"></i>
                             </Tooltip>
-
                         </div>
 
                         {/*    price and ex price*/}
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
-                                <Typography variant="h3" color="blue-gray">1.500 TL</Typography>
-                                <Typography variant="h6" color="gray" className="line-through">1.200 TL</Typography>
+                                <Typography variant="h3" color="blue-gray">
+                                    {hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)} TL
+                                </Typography>
+                                <Typography variant="h6" color="gray" className="line-through">
+                                    {hotelData?.hotel_price} TL
+                                </Typography>
                             </div>
-                            <Typography variant="h6" color="gray">The price includes taxes and fees for one
-                                night.</Typography>
+                            <Typography variant="h6" color="gray">
+                                The price includes taxes and fees for one night.
+                            </Typography>
+                        </div>
+                        <div className="grid items-center">
+                            {decodedToken ? <Button
+                                    variant={"outlined"}
+                                    color={"blue"}
+                                    className="btn btn-primary"
+                                    onClick={makeReservation}
+                                >
+                                    <Typography variant="button" color="">
+                                        Make Reservation With Membership Discount {" "}
+                                        <span className="font-bold text-xl">
+                                        {hotelData?.hotel_price - (hotelData?.hotel_price * decodedToken?.discount / 100)} TL
+                                        </span>
+                                    </Typography>
+                                </Button> :
+                                <Button
+                                    variant={"outlined"}
+                                    color={"blue"}
+                                    className="btn btn-primary"
+                                    onClick={makeReservation}
+                                >
+                                    <Typography variant="button" color="">
+                                        Make Reservation
+                                        <span className="font-bold text-xl">
+                                        </span>
+                                    </Typography>
+                                </Button>
+                            }
                         </div>
 
 

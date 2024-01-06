@@ -33,7 +33,7 @@ export function Drawler() {
             <Button variant={"outlined"} color={"indigo"} onClick={openDrawer} className="px-3 py-2.5">
                 <AdjustmentsHorizontalIcon className="h-5 w-5"/>
             </Button>
-            <Drawer open={open} onClose={closeDrawer}>
+            <Drawer open={open} onClose={closeDrawer}  outsidePress={false}>
                 <div className="mb-2 flex items-center justify-between p-4">
                     <Typography variant="h5" color="blue-gray">
                         Material Tailwind

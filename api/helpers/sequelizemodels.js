@@ -1,8 +1,8 @@
 // helpers/sequelizemodels.js
 const {DataTypes} = require('sequelize');
 
-const Patients  = {
-    patient_id: {
+const Users = {
+    user_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -15,50 +15,7 @@ const Patients  = {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    idNumber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    gender: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    blood_type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    typeofsickness: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    extra_notes: {
-        type: DataTypes.STRING,
-    },
-    phone: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    adminID: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'Admin',
-            key: 'adminID',
-        },
-    }
-}
-const Admin = {
-    adminID: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    surname: {
+    email: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -76,35 +33,85 @@ const Admin = {
         allowNull: false,
         unique: true,
     },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    occupation_id: {
+    gender: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-            model: 'Occupations',
-            key: 'occupation_id',
-        },
     },
-};
+    country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    city: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    district: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    discount: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    }
+}
 
-const Occupations = {
-    occupation_id: {
+const Hotels = {
+    hotel_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
-    occupation_name: {
+    hotel_name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-};
+    hotel_description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    hotel_price: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    hotel_country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    hotel_features: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    hotel_rating: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    hotel_comments: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    hotel_limit: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    hotel_latitude: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+    },
+    hotel_longitude: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+    },
+    hotel_images: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    hotel_discount: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+}
 
 module.exports = {
-     Patients,
-     Admin,
-    Occupations
+    Users,
+    Hotels,
 };

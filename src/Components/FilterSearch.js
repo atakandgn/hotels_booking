@@ -4,7 +4,6 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import CitySelect from "./CitySelect";
 import countriesData from "../countries+states+cities.json";
-import {CustomButton} from "./CustomButton";
 
 export default function FilterSearch() {
     const [startDate, setStartDate] = useState(null);

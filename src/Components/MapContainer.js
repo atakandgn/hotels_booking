@@ -16,8 +16,8 @@ const MapContainer = ({ center, zoom =14}) => {
     return (
         <LeafletMap center={center} zoom={zoom} style={{ width: '100%', height: '400px' }}>
             <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <Marker position={center} icon={customMarkerIcon}>
                 <Popup>

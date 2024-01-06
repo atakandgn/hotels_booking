@@ -1,6 +1,5 @@
 import React from 'react';
 import MainLayout from "../MainLayout";
-import FilterSearch from "../Components/FilterSearch";
 import ProductCard from "../Components/ProductCard";
 
 

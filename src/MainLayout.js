@@ -12,9 +12,9 @@ function MainLayout({children}) {
         <div className="">
             <Navbar/>
             <div className="container mx-auto min-h-[100vh] lg:px-0 px-2">{children}</div>
-             <ScrollTop/>
+            <ScrollTop/>
             <Footer className="fixed bottom"/>
-            <Toaster/>
+            <Toaster containerClassName="custom-toast-container"/>
         </div>
     )
 }
