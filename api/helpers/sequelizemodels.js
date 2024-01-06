@@ -78,7 +78,7 @@ const Hotels = {
         allowNull: false,
     },
     hotel_features: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     hotel_rating: {

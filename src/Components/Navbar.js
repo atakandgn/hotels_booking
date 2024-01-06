@@ -54,7 +54,7 @@ export default function Navbar() {
     const logOut = () => {
         localStorage.removeItem('token');
         setDecodedToken(null);
-        navigate(`/`);
+        window.location.reload();
     }
 
     const handleLogin = async () => {
