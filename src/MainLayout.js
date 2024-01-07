@@ -4,9 +4,6 @@ import {Footer} from "./Components/Footer";
 import {Toaster} from "react-hot-toast";
 import ScrollTop from "./Components/ScrollTop";
 
-// import ScrollTop from "../Components/Extra/ScrollTop";
-
-
 function MainLayout({children}) {
     return (
         <div className="">

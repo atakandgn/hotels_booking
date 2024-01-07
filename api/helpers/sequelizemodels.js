@@ -93,6 +93,10 @@ const Hotels = {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    hotel_address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     hotel_latitude: {
         type: DataTypes.DOUBLE,
         allowNull: false,
@@ -102,7 +106,7 @@ const Hotels = {
         allowNull: false,
     },
     hotel_images: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
     },
     hotel_discount: {
@@ -111,7 +115,45 @@ const Hotels = {
     },
 }
 
+const Booking = {
+    booking_id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+    },
+    hotel_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Hotels,
+            key: 'hotel_id',
+        },
+    },
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Users,
+            key: 'user_id',
+        },
+    },
+    start_date: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    end_date: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    travellers_count: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+
+}
+
 module.exports = {
     Users,
     Hotels,
+    Booking
 };

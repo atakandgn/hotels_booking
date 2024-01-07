@@ -1,4 +1,3 @@
-// MapContainer.js
 import React from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -12,7 +11,7 @@ const customMarkerIcon = new L.divIcon({
     popupAnchor: [0, -48]
 });
 
-const MapContainer = ({ center, zoom =14}) => {
+const MapContainer = ({ center, zoom = 13 }) => {
     return (
         <LeafletMap center={center} zoom={zoom} style={{ width: '100%', height: '400px' }}>
             <TileLayer

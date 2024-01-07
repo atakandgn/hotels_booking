@@ -8,50 +8,6 @@ import {StarIcon} from "@heroicons/react/20/solid";
 
 export default function ProductCard() {
     const decodedToken = getDecodedToken();
-    const productArray = [
-        {
-            id: 1,
-            name: "Next Hotel Istanbul City Center",
-            description: "The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to &quot;Naviglio&quot; where you can enjoy the main night life in Barcelona.",
-            price: 1500,
-            discount: 1200,
-            rating: 10,
-            ratingCount: 3,
-            image: "https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-            isMember: true,
-            isFeatured: true,
-            isLastMinute: true,
-            isMostPopular: true,
-        },
-        {
-            id: 2,
-            name: "Next Hotel Istanbul City Center",
-            description: "The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to &quot;Naviglio&quot; where you can enjoy the main night life in Barcelona.",
-            price: 1500,
-            discount: 1200,
-            rating: 10,
-            ratingCount: 3,
-            image: "https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-            isMember: true,
-            isFeatured: true,
-            isLastMinute: true,
-            isMostPopular: true,
-        },
-        {
-            id: 3,
-            name: "Next Hotel Istanbul City Center",
-            description: "The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to &quot;Naviglio&quot; where you can enjoy the main night life in Barcelona.",
-            price: 1500,
-            discount: 1200,
-            rating: 10,
-            ratingCount: 3,
-            image: "https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-            isMember: true,
-            isFeatured: true,
-            isLastMinute: true,
-            isMostPopular: true,
-        }
-    ]
 
     const [hotelData, setHotelData] = useState({hotels: []});
     const getHotels = async () => {

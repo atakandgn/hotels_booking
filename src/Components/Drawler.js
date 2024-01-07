@@ -10,7 +10,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 import FilterSearch from "./FilterSearch";
 import {AdjustmentsHorizontalIcon} from "@heroicons/react/24/outline";
 
-
 export function Drawler() {
     const [open, setOpen] = useState(false);
     const openDrawer = () => setOpen(true);

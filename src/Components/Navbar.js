@@ -242,7 +242,7 @@ export default function Navbar() {
                     </div>
                 )}
 
-                <Drawler/>
+                {/*<Drawler/>*/}
 
             </div>
             <Modal
