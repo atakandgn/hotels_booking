@@ -8,6 +8,7 @@ import {CustomButton} from "./CustomButton";
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {getDecodedToken} from "./auth";
+import {StarIcon} from "@heroicons/react/20/solid";
 
 export function ProductCardHorizontal({data}) {
     const decodedToken = getDecodedToken();
@@ -131,11 +132,11 @@ export function ProductCardHorizontal({data}) {
             {
                 data.map((item, index) => {
                     return (
-                        <Card className="w-full h-60 flex-row" id={index}>
+                        <Card className="w-full lg:h-60 md:flex-row flex-col" id={index}>
                             <CardHeader
                                 shadow={false}
                                 floated={false}
-                                className="m-0 w-2/5 shrink-0 rounded-r-none"
+                                className="m-0 md:w-2/5 w-full md:h-full h-40 shrink-0 md:rounded-r-none"
                             >
                                 <img
                                     src={item?.hotel_images}
@@ -143,8 +144,8 @@ export function ProductCardHorizontal({data}) {
                                     className="h-full w-full object-cover"
                                 />
                             </CardHeader>
-                            <CardBody className="w-full flex justify-between items gap-3 py-4 px-2">
-                                <div className="flex flex-col w-2/3">
+                            <CardBody className="w-full flex justify-between items sm:gap-3 gap-1 py-4 px-2">
+                                <div className="flex flex-col sm:w-2/3 w-1/2">
                                     <div className="flex flex-col">
                                         <Typography variant="h6" color="gray" className="uppercase">
                                             {item?.hotel_name}
@@ -153,36 +154,113 @@ export function ProductCardHorizontal({data}) {
                                             {item?.hotel_address}
                                         </Typography>
 
-                                        <div className="flex items-center gap-2 flex-wrap mt-3">
-                                            {
-                                                hotelFeatures[index]
-                                            }
-
+                                        <div className="flex gap-3 flex-col py-2">
+                                            <Typography variant="h5" color="gray">
+                                                Hotel Features:
+                                            </Typography>
+                                            <div className="flex flex-row gap-2">
+                                                {
+                                                    hotelFeatures[index]
+                                                }
+                                            </div>
                                         </div>
                                     </div>
 
                                     <Typography variant="paragraph" color="gray"
                                                 className="text-sm bg-gray-50/10 p-2 h-full flex items-center">
-                                        {item?.hotel_description}
+                                        <Tooltip
+                                            placement="bottom"
+                                            className="border border-blue-gray-50 bg-white px-4 py-3 shadow-xl shadow-black/10"
+                                            content={
+                                                <div className="w-80">
+                                                    <Typography color="blue-gray" className="font-medium">
+                                                        {item?.hotel_name} Hotel Description
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="small"
+                                                        color="blue-gray"
+                                                        className="font-normal opacity-80"
+                                                    >
+                                                        {item?.hotel_description}
+                                                    </Typography>
+                                                </div>
+                                            }
+                                        >
+                                        <span className=" text-truncate-3">
+                                             {item?.hotel_description}
+                                        </span>
+                                        </Tooltip>
                                     </Typography>
                                 </div>
 
-                                <div className="flex flex-col justify-between items-end">
+                                <div className="flex flex-col justify-between items-end sm:w-1/3 w-1/2">
                                     <div className="flex flex-col gap-2 items-end">
-                                        <Chip value={item?.hotel_discount} color="teal"/>
+                                        <Chip value={"%"+item?.hotel_discount+ " Discount"} color="teal" className="normal-case"/>
                                         <div>
-                                            <span className="text-sm line-through"> {item?.hotel_price} TL</span>
-                                            <span className="text-2xl font-bold"> {item?.hotel_price - item?.hotel_price * item?.hotel_discount / 100} TL</span>
+                                            <span className="text-sm line-through "> {item?.hotel_price}₺</span>
+                                            <span
+                                                className="lg:text-2xl text-lg font-bold"> {parseFloat(item?.hotel_price - item?.hotel_price * item?.hotel_discount / 100).toLocaleString()} ₺</span>
                                         </div>
-                                        <Typography color="gray" variant="h6" className="text-right ">
+                                        <Typography color="gray" variant="h6" className="text-right sm:text-[14px] text-[13px]">
                                             The price includes taxes and fees for one night.
                                         </Typography>
+
+                                        <Typography color="gray" className="text-[13px] text-start">
+                                            <div className="flex items-center gap-1">
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <StarIcon
+                                                        key={star}
+                                                        className={`h-5 w-5 cursor-pointer ${star <= item?.hotel_rating ? 'text-yellow-500' : 'text-gray-300'}`}
+                                                    />
+                                                ))}
+                                                {
+                                                    (() => {
+                                                        switch (item?.hotel_rating) {
+                                                            case 5:
+                                                                return <span
+                                                                    className="text-purple-500">Excellent ({item?.hotel_comments + " "}Review)</span>;
+                                                            case 4:
+                                                                return <span
+                                                                    className="text-blue-500">Amazing ({item?.hotel_comments + " "} Review)</span>;
+                                                            case 3:
+                                                                return <span
+                                                                    className="text-green-500">Very Good ({item?.hotel_comments + " "} Review)</span>;
+                                                            case 2:
+                                                                return <span
+                                                                    className="text-yellow-500">Good ({item?.hotel_comments + " "} Review)</span>;
+                                                            case 1:
+                                                                return <span
+                                                                    className="text-red-500">Fair ({item?.hotel_comments + " "} Review)</span>;
+                                                            default:
+                                                                return <span
+                                                                    className="text-gray-500">Good ({item?.hotel_comments + " "} Review)</span>;
+                                                        }
+                                                    })()
+                                                }
+
+
+                                            </div>
+
+                                        </Typography>
                                     </div>
-                                    <Button color="indigo" variant="outlined" size="sm" rounded={false} ripple="light">
-                                        <Link to={`/product/${item?.hotel_id}`}>
-                                            View Details
-                                        </Link>
-                                    </Button>
+                                    <div>
+                                        <Button color="indigo" variant="outlined" size="sm" rounded={false}
+                                                ripple="light">
+                                            <Link to={`/product/${item?.hotel_id}`}>
+                                                View Details
+                                            </Link>
+                                        </Button>
+                                        {
+                                            decodedToken ? (
+                                                <Typography color="gray" variant="h6" className="text-right mt-2">
+                                                    {
+                                                        parseFloat((item?.hotel_price - item?.hotel_price * item?.hotel_discount / 100) - (item?.hotel_price - item?.hotel_price * item?.hotel_discount / 100) * (decodedToken?.discount / 100)).toLocaleString()
+                                                    }
+                                                </Typography>
+                                            ) : (null)
+                                        }
+                                    </div>
+
                                 </div>
 
 

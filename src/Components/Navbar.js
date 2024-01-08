@@ -106,8 +106,6 @@ export default function Navbar() {
     }, []);
 
 
-
-
     useEffect(() => {
         // Check for session timeout every minute
         const timeoutInterval = setInterval(() => {
@@ -160,7 +158,7 @@ export default function Navbar() {
         country: '',
         city: '',
         district: '',
-        discount: 5, // default discount rate is 5
+        discount: '',
     });
 
     const registerUser = async () => {
@@ -214,7 +212,7 @@ export default function Navbar() {
 
 
     return (
-        <div className="flex justify-between items-center w-full h-[100px] bg-slate-100 px-12">
+        <div className="flex justify-between items-center w-full h-[100px] px-12">
             <Link to="/">
                 <img className="object-contain lg:w-[300px] lg:h-[75px] w-[150px] h-[75px]"
                      src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Hotels.com_logo.svg/2560px-Hotels.com_logo.svg.png"
@@ -227,7 +225,8 @@ export default function Navbar() {
                             <PopoverHandler>
                                 <Button>Welcome, <i>{storageToken.name} {storageToken.surname}</i></Button>
                             </PopoverHandler>
-                            <PopoverContent className="flex items-center justify-center gap-2 cursor-pointer" onClick={logOut}>
+                            <PopoverContent className="flex items-center justify-center gap-2 cursor-pointer"
+                                            onClick={logOut}>
                                 <ArrowLeftStartOnRectangleIcon className="h-6 w-6"/>
                                 <Typography color="blue-gray" className="text-center font-normal">
                                     Log Out
@@ -237,8 +236,8 @@ export default function Navbar() {
                     </div>
                 ) : (
                     <div className="flex gap-4 items-center">
-                        <Button onClick={openLoginModal}>Sign In</Button>
-                        <Button onClick={openRegisterModal}>Sign Up</Button>
+                        <Button variant="outlined" onClick={openLoginModal}>Log In</Button>
+                        <Button variant="gradient" onClick={openRegisterModal}>Sign Up</Button>
                     </div>
                 )}
 

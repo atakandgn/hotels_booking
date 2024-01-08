@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import flatpickr from 'flatpickr';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 import {
     Button,
     Input,
@@ -12,10 +12,11 @@ import {
     Typography,
 } from '@material-tailwind/react';
 import countriesData from '../countries+states+cities.json';
-import {MinusIcon, PlusIcon} from '@heroicons/react/24/outline';
+import {MinusIcon, PlusIcon, TrashIcon} from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import ProductCard from './ProductCard';
 import {ProductCardHorizontal} from './ProductCardHorizontal';
+import {CustomAlert} from "./Alert";
 
 export default function FilterHotelData() {
     const [startDate, setStartDate] = useState(null);
@@ -25,7 +26,38 @@ export default function FilterHotelData() {
     const [roomsCount, setRoomsCount] = useState(1);
     const [appliedFilters, setAppliedFilters] = useState([]);
     const [filterData, setFilterData] = useState([]);
-    const [isFilterButtonClicked, setIsFilterButtonClicked] = useState(false);
+    const [isFilterRequestSent, setIsFilterRequestSent] = useState(false);
+    const [prevFilterParams, setPrevFilterParams] = useState(null);
+
+    const discardFilter = () => {
+        // Reset all filters and state variables
+        setSelectedCountry('');
+        setStartDate(null);
+        setEndDate(null);
+        setTravelersCount(1);
+        setRoomsCount(1);
+        setAppliedFilters([]);
+        setFilterData([]);
+        setIsFilterRequestSent(false);
+
+        // Reinitialize the date picker
+        const currentDate = new Date();
+        const datepicker = flatpickr('#datePicker', {
+            mode: 'range',
+            dateFormat: 'd/m/Y',
+            minDate: currentDate,
+            onClose: (selectedDates) => {
+                if (selectedDates.length === 2) {
+                    setStartDate(selectedDates[0]);
+                    setEndDate(selectedDates[1]);
+                }
+            },
+        });
+
+        // Clear the input field manually
+        datepicker.clear();
+    };
+
 
     useEffect(() => {
         const currentDate = new Date();
@@ -84,6 +116,12 @@ export default function FilterHotelData() {
     }, [filterData]);
 
     const handleSearch = async () => {
+        const currentFilterParams = {
+            country: selectedCountry,
+            startDate,
+            endDate,
+            travelersCount,
+        };
         const filters = [];
         if (selectedCountry) filters.push(selectedCountry);
         let formattedStartDate = '';
@@ -99,20 +137,27 @@ export default function FilterHotelData() {
         if (roomsCount) filters.push(`${roomsCount} Rooms`);
 
         setAppliedFilters(filters);
-
-        try {
-            const response = await axios.post('http://localhost:5000/getHotelsByFilter', {
-                country: selectedCountry,
-                startDate: formattedStartDate,
-                endDate: formattedEndDate,
-                travelersCount: travelersCount,
-            });
-
-            setFilterData(response.data);
-            setIsFilterButtonClicked(true);
-        } catch (error) {
-            console.error('Error during Axios request:', error);
-            toast.error("Please select a country!");
+        if (prevFilterParams && JSON.stringify(currentFilterParams) === JSON.stringify(prevFilterParams)) {
+            toast.error('Please select different filter criteria.');
+        } else {
+            try {
+                setFilterData([])
+                const response = await axios.post(
+                    'http://localhost:5000/getHotelsByFilter',
+                    {
+                        country: selectedCountry,
+                        startDate: formattedStartDate,
+                        endDate: formattedEndDate,
+                        travelersCount: travelersCount,
+                    }
+                );
+                setFilterData(response.data);
+                setIsFilterRequestSent(true);
+                setPrevFilterParams(currentFilterParams);
+            } catch (error) {
+                console.error('Error during Axios request:', error);
+                toast.error('Please select Country and Date Range');
+            }
         }
     };
 
@@ -120,7 +165,7 @@ export default function FilterHotelData() {
     return (
         <div>
             <div className="container mx-auto my-6 ">
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 gap-4">
                     <Select
                         className="w-full"
                         variant="outlined"
@@ -145,7 +190,11 @@ export default function FilterHotelData() {
                     />
                     <Popover placement="bottom">
                         <PopoverHandler>
-                            <Button variant="outlined" color="blue-gray" className="text-start">
+                            <Button
+                                variant="outlined"
+                                color="blue-gray"
+                                className="text-start h-10"
+                            >
                                 Travellers and Room Details
                             </Button>
                         </PopoverHandler>
@@ -218,40 +267,45 @@ export default function FilterHotelData() {
                             </div>
                         </PopoverContent>
                     </Popover>
-                    <Button onClick={handleSearch} color="teal" ripple="light" variant="gradient" className="w-full">
-                        Filter
-                    </Button>
-                </div>
-                {appliedFilters.length > 0 && (
-                    <div className="flex items-center flex-row gap-1">
-                        <Typography variant="h6" color="blue-gray">
-                            Filters:
-                        </Typography>
-                        <div className="flex gap-1">
-                            {appliedFilters.map((filter, index) => (
-                                <Typography variant="paragraph" color="blue-gray" key={index}>
-                                    {filter}
-                                </Typography>
-                            ))}
+                    <div className="flex flex-row gap-2">
+                        <Button
+                            onClick={handleSearch}
+                            color="gray"
+                            ripple="light"
+                            variant="gradient"
+                            className="w-[85%] h-10"
+                        >
+                            Filter
+                        </Button>
+                        <div className="flex items-center justify-center w-[15%]">
+                            <Button onClick={discardFilter} color="gray" ripple="light" variant="outlined"
+                                    className="h-10 w-10 p-0 m-0 flex items-center justify-center">
+                                <TrashIcon className="w-6 h-6 p-0 m-0"/>
+                            </Button>
                         </div>
+
+                    </div>
+
+                </div>
+                {filterData?.hotels && appliedFilters.length > 0 && (
+                    <CustomAlert closeable={true} type="gray"
+                                 message={`Showing Results: ${appliedFilters.join(', ')}`}/>
+                )}
+
+                {isFilterRequestSent ? (
+                    <div>
+                        {filterData?.hotels ? (
+                            <ProductCardHorizontal data={filterData.hotels}/>
+                        ) : (
+                            <CustomAlert type="yellow" message="No available hotels for the specified criteria."/>
+                        )}
+                    </div>
+                ) : (
+                    <div>
+                        <ProductCard/>
                     </div>
                 )}
             </div>
-
-            {/* Display filterData values if filter button is clicked else show ProductCard */}
-            {isFilterButtonClicked ? (
-                filterData.hotels.length > 0 ? (
-                    <ProductCardHorizontal data={filterData.hotels}/>
-                ) : (
-                    <div className="container mx-auto my-6">
-                        <Typography variant="h6" color="blue-gray">
-                            No hotels found for the selected filters.
-                        </Typography>
-                    </div>
-                )
-            ) : (
-                <ProductCard/>
-            )}
         </div>
     );
 }

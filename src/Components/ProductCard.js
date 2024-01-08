@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {Badge, Button, Card, CardBody, CardFooter, CardHeader, Chip, Typography} from "@material-tailwind/react";
 import {Link} from "react-router-dom";
 import {getDecodedToken} from './auth';
-import {BanknotesIcon} from "@heroicons/react/24/outline";
 import axios from "axios";
 import {StarIcon} from "@heroicons/react/20/solid";
 
@@ -59,21 +58,26 @@ export default function ProductCard() {
                                                         (() => {
                                                             switch (product?.hotel_rating) {
                                                                 case 5:
-                                                                    return <span className="text-purple-500">Excellent ({product?.hotel_comments + " "}Review)</span>;
+                                                                    return <span
+                                                                        className="text-purple-500">Excellent ({product?.hotel_comments + " "}Review)</span>;
                                                                 case 4:
-                                                                    return <span className="text-blue-500">Amazing ({product?.hotel_comments + " "} Review)</span>;
+                                                                    return <span
+                                                                        className="text-blue-500">Amazing ({product?.hotel_comments + " "} Review)</span>;
                                                                 case 3:
-                                                                    return <span className="text-green-500">Very Good ({product?.hotel_comments + " "} Review)</span>;
+                                                                    return <span
+                                                                        className="text-green-500">Very Good ({product?.hotel_comments + " "} Review)</span>;
                                                                 case 2:
-                                                                    return <span className="text-yellow-500">Good ({product?.hotel_comments + " "} Review)</span>;
+                                                                    return <span
+                                                                        className="text-yellow-500">Good ({product?.hotel_comments + " "} Review)</span>;
                                                                 case 1:
-                                                                    return <span className="text-red-500">Fair ({product?.hotel_comments + " "} Review)</span>;
+                                                                    return <span
+                                                                        className="text-red-500">Fair ({product?.hotel_comments + " "} Review)</span>;
                                                                 default:
-                                                                    return <span className="text-gray-500">Good ({product?.hotel_comments + " "} Review)</span>;
+                                                                    return <span
+                                                                        className="text-gray-500">Good ({product?.hotel_comments + " "} Review)</span>;
                                                             }
                                                         })()
                                                     }
-
 
 
                                                 </div>
@@ -91,10 +95,10 @@ export default function ProductCard() {
                                             <div className="flex flex-col gap-2">
                                                 <div className="flex items-end gap-2">
                                                 <span className="text-sm line-through">
-                                                 {product?.hotel_price} TL
+                                                 {parseFloat(product?.hotel_price).toLocaleString()} ₺
                                                 </span>
                                                     <span className="text-lg font-bold">
-                                                    {product?.hotel_price - (product?.hotel_price * product?.hotel_discount / 100)} TL
+                                                    {parseFloat(product?.hotel_price - product?.hotel_price * product?.hotel_discount / 100).toLocaleString()} ₺
                                                 </span>
                                                 </div>
 
@@ -112,12 +116,12 @@ export default function ProductCard() {
                                                     <Typography
                                                         variant="small"
                                                         color="white"
-                                                        className="font-medium capitalize leading-none"
+                                                        className="font-medium capitalize leading-none w-full"
                                                     >
                                                         Discounts For MEMBERS ONLY
                                                     </Typography>
                                                 }
-                                                className="rounded-full py-1.5 w-max my-1"
+                                                className="rounded-full py-1.5 w-full my-1 text-center"
                                             />
 
 
@@ -128,24 +132,20 @@ export default function ProductCard() {
                                                     //   Special price for members  {
                                                     //    product.price - (product.price * decodedToken?.discount / 100)
                                                     // }
-                                                    <div className="w-full flex items-center justify-center">
-                                                        <Chip
-                                                            color=""
-                                                            icon={
-                                                                <BanknotesIcon className="text-white w-6 h-6"/>
-                                                            }
-                                                            value={
-                                                                <Typography
-                                                                    variant="h3"
-                                                                    color="white"
-                                                                    className="font-medium capitalize leading-none member-price"
-                                                                >
-                                                                    {product?.hotel_price - (product?.hotel_price * decodedToken?.discount / 100)} TL
-                                                                </Typography>
-                                                            }
-                                                            className="rounded-full px-4"
-                                                        />
-                                                    </div>
+
+                                                    <Button
+                                                        color="deep-purple"
+                                                        variant="outlined"
+                                                        className="w-full py-1"
+                                                    >
+                                                        <Typography variant="button" color="deep-purple" className="normal-case flex items-center justify-center gap-1">
+                                                            {/*<BanknotesIcon className="w-6 h-6"/>*/}
+                                                            For You:{" "} <b>{
+                                                                parseFloat(
+                                                                    (product?.hotel_price-(product?.hotel_price * product?.hotel_discount / 100)) - (product?.hotel_price-(product?.hotel_price * product?.hotel_discount / 100)) * (decodedToken?.discount / 100) ).toLocaleString()
+                                                            } ₺</b>
+                                                        </Typography>
+                                                    </Button>
                                                 ) : (
                                                     <Button
                                                         color="indigo"

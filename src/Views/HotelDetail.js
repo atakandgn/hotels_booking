@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import MainLayout from "../MainLayout";
 import {Alert, Button, Chip, Tooltip, Typography} from "@material-tailwind/react";
-import {ChevronRightIcon} from "@heroicons/react/16/solid";
 import {ImageGallery} from "../Components/ImageGallery";
 import MapContainer from "../Components/MapContainer";
 import CommentsCarousel from "../Components/Comments";
@@ -42,11 +41,11 @@ export default function HotelDetail() {
         hotelData && hotelData.hotel_latitude,
         hotelData && hotelData.hotel_longitude
     ];
-    console.log("hotelData", hotelData)
+
     const makeTheReservation = async (rating, comment) => {
         return new Promise((resolve, reject) => {
-            // Add your actual save comment logic here
-            // For now, let's just simulate success
+            //  Comment Functionality
+            // For now, its just simulate success
             setTimeout(() => {
                 resolve("Comment sent successfully!");
             }, 1000);
@@ -55,16 +54,20 @@ export default function HotelDetail() {
 
     const makeReservation = () => {
         toast.promise(
-            new Promise((resolve) => {
+            new Promise((resolve, reject) => {
                 setTimeout(() => {
                     // Simulate a successful reservation after a delay
-                    resolve("Reservation is made successfully!");
+                    (decodedToken ?
+                        resolve("Reservation is made successfully!")
+                        :
+                        reject("Please Login to Make Reservation")
+                    );
                 }, 1000);
             }),
             {
                 loading: 'Making Reservation...',
                 success: <b>Reservation is made successfully!</b>,
-                error: <b>Something went wrong!</b>,
+                error: <b>Please Login to Make Reservation</b>,
             }
         );
     };
@@ -174,7 +177,7 @@ export default function HotelDetail() {
     return (
         <MainLayout>
             <div className="flex flex-col gap-8">
-                <div className="grid lg:grid-cols-2 grid-cols-1 gap-2">
+                <div className="grid lg:grid-cols-2 grid-cols-1 gap-2 my-4">
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col gap-2">
                             <Typography variant="h3" color="blue-gray">
@@ -261,10 +264,10 @@ export default function HotelDetail() {
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
                                 <Typography variant="h3" color="blue-gray">
-                                    {hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)} TL
+                                    {parseFloat(hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)).toLocaleString()} TL
                                 </Typography>
                                 <Typography variant="h6" color="gray" className="line-through">
-                                    {hotelData?.hotel_price} TL
+                                    {parseFloat(hotelData?.hotel_price).toLocaleString()} ₺
                                 </Typography>
                             </div>
                             <Typography variant="h6" color="gray">
@@ -281,7 +284,10 @@ export default function HotelDetail() {
                                     <Typography variant="button" color="">
                                         Make Reservation With Membership Discount {" "}
                                         <span className="font-bold text-xl">
-                                        {hotelData?.hotel_price - (hotelData?.hotel_price * decodedToken?.discount / 100)} TL
+                                        {parseFloat(
+                                            (hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)) - (hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)) * decodedToken?.discount / 100
+
+                                        ).toLocaleString()} TL
                                         </span>
                                     </Typography>
                                 </Button> :
@@ -302,7 +308,7 @@ export default function HotelDetail() {
 
 
                     </div>
-                    <ImageGallery images={hotelData?.hotel_images }/>
+                    <ImageGallery images={hotelData?.hotel_images}/>
                 </div>
 
                 {mapCenter[0] && mapCenter[1] ? (
