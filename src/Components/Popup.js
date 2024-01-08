@@ -19,7 +19,7 @@ export function Popup({customClass, headerTxt, bodyTxt}) {
                 setOpen(true);
             } else if (decodedToken === null && popupClosedTimestamp) {
                 // Check timestamp if decodedToken is null
-                const fiveMinutes = 5 * 60 * 1000;
+                const fiveMinutes = 30 * 60 * 1000;
                 const currentTime = new Date().getTime();
 
                 if (currentTime - parseInt(popupClosedTimestamp) < fiveMinutes) {
