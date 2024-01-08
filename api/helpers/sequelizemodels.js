@@ -49,7 +49,7 @@ const Users = {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    discount: {
+    coupon_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
     }
@@ -152,8 +152,43 @@ const Booking = {
 
 }
 
+const Coupons=  {
+    coupon_id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        references: {
+            model: Users,
+            key: 'coupon_id',
+        },
+    },
+    coupon_code: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    coupon_discount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    coupon_limit: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    coupon_start_date: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    coupon_end_date: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+}
+
+
+
 module.exports = {
     Users,
     Hotels,
-    Booking
+    Booking,
+    Coupons
 };

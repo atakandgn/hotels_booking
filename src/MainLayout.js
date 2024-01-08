@@ -13,8 +13,9 @@ function MainLayout({children}) {
             <div className="relative">
                 <Popup
                     headerTxt={"Welcome to the new and improved version of the website!"}
-                    bodyTxt={"Register now and get 25% discount on your first order!"}
+                    bodyTxt={"Register now with <b> <u>'HELLO25'</u></b>  and get 25% discount on your first order!"}
                     customClass=""/>
+
                 <Navbar/>
                 <div className="container mx-auto min-h-[75vh] lg:px-0 px-2">{children}</div>
                 <ScrollTop/>

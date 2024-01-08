@@ -58,6 +58,10 @@ router.get('/getHotelDetail/:id', async (req, res) => {
     }
 );
 
+// i want to filter with country, startDate, endDate and travelersCount .
+// check all hotels equal to country=country , start and end date between requested start and end date ,
+// and travellersCount is  smaller than hotel_limit.
+
 router.post('/getHotelsByFilter', async (req, res) => {
     try {
         const { error, value } = Joi.object({
@@ -88,8 +92,8 @@ router.post('/getHotelsByFilter', async (req, res) => {
             tableName: 'booking',
         });
 
-        // Check if there are available hotels that meet the criteria
-        const { count, rows: availableHotels } = await hotelsModel.findAndCountAll({
+        // Find hotels that meet the criteria
+        const availableHotels = await hotelsModel.findAll({
             where: {
                 hotel_country: country,
                 hotel_limit: {
@@ -98,12 +102,12 @@ router.post('/getHotelsByFilter', async (req, res) => {
             },
         });
 
-        if (count === 0) {
+        if (availableHotels.length === 0) {
             return res.status(200).json({ message: 'No available hotels for the specified criteria' });
         }
-
-        // Check if there are bookings that overlap with the specified date range
-        const conflictingBookings = await bookingModel.findAll({
+        
+        const bookedHotelIds = await bookingModel.findAll({
+            attributes: ['hotel_id'],
             where: {
                 [Op.and]: [
                     {
@@ -118,25 +122,20 @@ router.post('/getHotelsByFilter', async (req, res) => {
                     },
                 ],
             },
+            raw: true,
         });
 
-        if (conflictingBookings.length > 0) {
-            return res.status(200).json({ message: 'Hotels are not available for the specified date range' });
-        }
-
-        const hotelsWithConvertedFeatures = availableHotels.map((hotel) => {
-            if (hotel.hotel_features) {
-                hotel.hotel_features = hotel.hotel_features.split(',').map(Number);
-            }
-            return hotel;
+        const availableNotBookedHotels = availableHotels.filter(hotel => {
+            return !bookedHotelIds.some(booking => booking.hotel_id === hotel.hotel_id);
         });
 
         // If no conflicts, return the available hotels and count
-        res.status(200).json({ count, hotels: hotelsWithConvertedFeatures });
+        res.status(200).json({ count: availableNotBookedHotels.length, hotels: availableNotBookedHotels });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 module.exports = router;

@@ -27,6 +27,7 @@ export default function Navbar() {
     const [loginData, setLoginData] = useState({});
 
     const [decodedToken, setDecodedToken] = useState(null);
+    console.log("decodedToken:", decodedToken)
     const [lastActivity, setLastActivity] = useState(new Date().getTime());
 
     const openRegisterModal = () => {
@@ -158,7 +159,7 @@ export default function Navbar() {
         country: '',
         city: '',
         district: '',
-        discount: '',
+        coupon_code: '',
     });
 
     const registerUser = async () => {
@@ -177,7 +178,7 @@ export default function Navbar() {
                     country: selectedCountry,
                     city: selectedCity,
                     district: selectedDistrict,
-                    discount: registerData.discount,
+                    coupon_code: registerData.coupon_code ? registerData.coupon_code : "DEFAULT",
                 },
                 {
                     headers: {
@@ -337,8 +338,8 @@ export default function Navbar() {
                             <Input
                                 variant="standard"
                                 label="Enter Coupon"
-                                value={registerData.discount}
-                                onChange={(e) => setRegisterData({discount: e.target.value})}
+                                value={registerData.coupon_code}
+                                onChange={(e) => setRegisterData({coupon_code: e.target.value})}
                             />
                         </div>
 

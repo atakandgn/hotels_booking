@@ -5,7 +5,7 @@ const {initializeSequelize} = require('../helpers/sequelize');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {Users} = require("../helpers/sequelizemodels");
+const {Users, Coupons} = require("../helpers/sequelizemodels");
 
 
 /**
@@ -56,24 +56,40 @@ const {Users} = require("../helpers/sequelizemodels");
 
 router.post('/login', async (req, res) => {
     try {
-        const {username, password} = req.body;
+        const { username, password } = req.body;
 
         const sequelize = await initializeSequelize();
         const usersModel = sequelize.define('Users', Users, {
             timestamps: false,
             freezeTableName: true,
         });
+        const couponsModel = sequelize.define('Coupons', Coupons, {
+            timestamps: false,
+            freezeTableName: true,
+        });
+
+        // Correct the association alias
+        usersModel.belongsTo(couponsModel, { foreignKey: 'coupon_id', targetKey: 'coupon_id', as: 'coupon' });
 
         // Check if the user exists
         const findUser = await usersModel.findOne({
             where: {
                 username,
             },
+            include: [
+                {
+                    model: couponsModel,
+                    as: 'coupon',
+                    attributes: ['coupon_discount'],
+                },
+            ],
         });
 
         if (!findUser) {
             return res.status(401).send('Invalid username or password');
         }
+
+        console.log("findUserATAKANTİTANNNNNNNNNNN:",findUser)
 
         // Check if the password is correct
         const isPasswordValid = await bcrypt.compare(password, findUser.password);
@@ -90,17 +106,18 @@ router.post('/login', async (req, res) => {
             surname: findUser.surname,
             gender: findUser.gender,
             phone: findUser.phone,
-            discount: findUser.discount,
+            coupon_rate: findUser.coupon ? findUser.coupon.coupon_discount : 5,
         };
         const token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY);
 
         // Send the token in the response
-        return res.status(200).json({token});
+        return res.status(200).json({ token });
     } catch (error) {
         console.error('Error:', error);
         return res.status(500).send('Internal server error during login.');
     }
 });
+
 
 
 // Register Swagger Documentation
@@ -202,7 +219,7 @@ router.post('/register', async (req, res) => {
             country: Joi.string().required(),
             city: Joi.string().required(),
             district: Joi.string().required(),
-            discount: Joi.number().integer().min(0).max(100).required(),
+            coupon_code: Joi.string().optional().default(1),
 
         }).validate(req.body);
 
@@ -210,7 +227,7 @@ router.post('/register', async (req, res) => {
             return res.status(400).send(`Validation Error: ${error.details[0].message}`);
         }
 
-        const {name, surname, email, username, password, phone, gender, country, city, district,discount} = value;
+        const {name, surname, email, username, password, phone, gender, country, city, district,coupon_code} = value;
 
         // Hash the password using bcrypt
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -219,6 +236,15 @@ router.post('/register', async (req, res) => {
         const usersModel = sequelize.define('Users', Users, {
             timestamps: false,
             freezeTableName: true,
+        });
+        const couponsModel = sequelize.define('Coupons', Coupons, {
+            timestamps: false,
+            freezeTableName: true,
+        });
+        const coupon = await couponsModel.findOne({
+            where: {
+                coupon_code: coupon_code,
+            },
         });
 
         // Create a new user
@@ -233,7 +259,7 @@ router.post('/register', async (req, res) => {
             country,
             city,
             district: district ? district : "-",
-            discount: discount ? discount : 5,
+            coupon_id: coupon ? coupon.coupon_id : 1,
         });
 
         if (!newUser) {

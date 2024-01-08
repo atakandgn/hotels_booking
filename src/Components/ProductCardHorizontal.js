@@ -132,7 +132,7 @@ export function ProductCardHorizontal({data}) {
             {
                 data.map((item, index) => {
                     return (
-                        <Card className="w-full lg:h-60 md:flex-row flex-col" id={index}>
+                        <Card className="w-full lg:h-64 md:flex-row flex-col" id={index}>
                             <CardHeader
                                 shadow={false}
                                 floated={false}
@@ -206,13 +206,16 @@ export function ProductCardHorizontal({data}) {
                                         </Typography>
 
                                         <Typography color="gray" className="text-[13px] text-start">
-                                            <div className="flex items-center gap-1">
-                                                {[1, 2, 3, 4, 5].map((star) => (
-                                                    <StarIcon
-                                                        key={star}
-                                                        className={`h-5 w-5 cursor-pointer ${star <= item?.hotel_rating ? 'text-yellow-500' : 'text-gray-300'}`}
-                                                    />
-                                                ))}
+                                            <div className="flex sm:flex-row flex-col  items-center gap-1">
+                                                <div className="flex flex-row items-center gap-1">
+                                                    {[1, 2, 3, 4, 5].map((star) => (
+                                                        <StarIcon
+                                                            key={star}
+                                                            className={`h-5 w-5 cursor-pointer ${star <= item?.hotel_rating ? 'text-yellow-500' : 'text-gray-300'}`}
+                                                        />
+                                                    ))}
+                                                </div>
+
                                                 {
                                                     (() => {
                                                         switch (item?.hotel_rating) {
@@ -243,7 +246,7 @@ export function ProductCardHorizontal({data}) {
 
                                         </Typography>
                                     </div>
-                                    <div>
+                                    <div className="my-1">
                                         <Button color="indigo" variant="outlined" size="sm" rounded={false}
                                                 ripple="light">
                                             <Link to={`/product/${item?.hotel_id}`}>
@@ -252,10 +255,12 @@ export function ProductCardHorizontal({data}) {
                                         </Button>
                                         {
                                             decodedToken ? (
-                                                <Typography color="gray" variant="h6" className="text-right mt-2">
+                                                <Typography color="purple" variant="h6" className="text-right mt-2">
                                                     {
-                                                        parseFloat((item?.hotel_price - item?.hotel_price * item?.hotel_discount / 100) - (item?.hotel_price - item?.hotel_price * item?.hotel_discount / 100) * (decodedToken?.discount / 100)).toLocaleString()
-                                                    }
+                                                        parseFloat((item?.hotel_price - item?.hotel_price * item?.hotel_discount / 100) - (item?.hotel_price - item?.hotel_price * item?.hotel_discount / 100) * (decodedToken?.coupon_rate / 100)).toLocaleString('en-US', {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        })} ₺
                                                 </Typography>
                                             ) : (null)
                                         }

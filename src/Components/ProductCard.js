@@ -83,7 +83,7 @@ export default function ProductCard() {
                                                 </div>
 
                                             </Typography>
-                                            <Link to={`/product/${product?.id}`}>
+                                            <Link to={`/product/${product?.hotel_id}`}>
                                                 <Typography variant="h5" color="blue-gray"
                                                             className="text-[18px] text-truncate-2">
                                                     {product?.hotel_name}
@@ -95,10 +95,16 @@ export default function ProductCard() {
                                             <div className="flex flex-col gap-2">
                                                 <div className="flex items-end gap-2">
                                                 <span className="text-sm line-through">
-                                                 {parseFloat(product?.hotel_price).toLocaleString()} ₺
+                                                 {parseFloat(product?.hotel_price).toLocaleString('en-US', {
+                                                     minimumFractionDigits: 2,
+                                                     maximumFractionDigits: 2,
+                                                 })} ₺
                                                 </span>
                                                     <span className="text-lg font-bold">
-                                                    {parseFloat(product?.hotel_price - product?.hotel_price * product?.hotel_discount / 100).toLocaleString()} ₺
+                                                    {parseFloat(product?.hotel_price - product?.hotel_price * product?.hotel_discount / 100).toLocaleString('en-US', {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2,
+                                                    })} ₺
                                                 </span>
                                                 </div>
 
@@ -129,10 +135,6 @@ export default function ProductCard() {
                                         <CardFooter className="pt-0 flex items-center">
                                             {
                                                 decodedToken ? (
-                                                    //   Special price for members  {
-                                                    //    product.price - (product.price * decodedToken?.discount / 100)
-                                                    // }
-
                                                     <Button
                                                         color="deep-purple"
                                                         variant="outlined"
@@ -142,8 +144,10 @@ export default function ProductCard() {
                                                             {/*<BanknotesIcon className="w-6 h-6"/>*/}
                                                             For You:{" "} <b>{
                                                                 parseFloat(
-                                                                    (product?.hotel_price-(product?.hotel_price * product?.hotel_discount / 100)) - (product?.hotel_price-(product?.hotel_price * product?.hotel_discount / 100)) * (decodedToken?.discount / 100) ).toLocaleString()
-                                                            } ₺</b>
+                                                                    (product?.hotel_price-(product?.hotel_price * product?.hotel_discount / 100)) - (product?.hotel_price-(product?.hotel_price * product?.hotel_discount / 100)) * (decodedToken?.coupon_rate / 100) ).toLocaleString('en-US', {
+                                                                    minimumFractionDigits: 2,
+                                                                    maximumFractionDigits: 2,
+                                                                })} ₺</b>
                                                         </Typography>
                                                     </Button>
                                                 ) : (

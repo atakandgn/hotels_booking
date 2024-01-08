@@ -264,10 +264,17 @@ export default function HotelDetail() {
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
                                 <Typography variant="h3" color="blue-gray">
-                                    {parseFloat(hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)).toLocaleString()} TL
+                                    {parseFloat(hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)).toLocaleString('en-US', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })} ₺
                                 </Typography>
                                 <Typography variant="h6" color="gray" className="line-through">
-                                    {parseFloat(hotelData?.hotel_price).toLocaleString()} ₺
+                                    {/*tostring 2 digit end*/}
+                                    {parseFloat(hotelData?.hotel_price).toLocaleString('en-US', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })} ₺
                                 </Typography>
                             </div>
                             <Typography variant="h6" color="gray">
@@ -285,9 +292,12 @@ export default function HotelDetail() {
                                         Make Reservation With Membership Discount {" "}
                                         <span className="font-bold text-xl">
                                         {parseFloat(
-                                            (hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)) - (hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)) * decodedToken?.discount / 100
+                                            (hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)) - (hotelData?.hotel_price - (hotelData?.hotel_price * hotelData?.hotel_discount / 100)) * decodedToken?.coupon_rate / 100
 
-                                        ).toLocaleString()} TL
+                                        ).toLocaleString('en-US', {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })} ₺
                                         </span>
                                     </Typography>
                                 </Button> :

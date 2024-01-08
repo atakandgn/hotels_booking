@@ -1,26 +1,42 @@
 import React, {useState, useEffect} from "react";
 import {Alert, Typography} from "@material-tailwind/react";
-import { InformationCircleIcon} from "@heroicons/react/24/outline";
+import {InformationCircleIcon} from "@heroicons/react/24/outline";
+import {getDecodedToken} from "./auth";
 
-export function Popup({customClass,headerTxt, bodyTxt}) {
+export function Popup({customClass, headerTxt, bodyTxt}) {
+    const decodedToken = getDecodedToken();
     const [open, setOpen] = useState(false);
+
 
     useEffect(() => {
         const popupClosedTimestamp = sessionStorage.getItem("popupClosedTimestamp");
+        const delay = 3000;
 
-        if (!popupClosedTimestamp) {
-            setOpen(true);
-        } else {
-            const fiveMinutes = 5 * 60 * 1000;
-            const currentTime = new Date().getTime();
-
-            if (currentTime - parseInt(popupClosedTimestamp) < fiveMinutes) {
-                setOpen(false);
-            } else {
+        // Delay the popup for 3 seconds
+        const timeoutId = setTimeout(() => {
+            if (decodedToken === null && !popupClosedTimestamp) {
+                // Show the popup if decodedToken is null and no stored timestamp
                 setOpen(true);
+            } else if (decodedToken === null && popupClosedTimestamp) {
+                // Check timestamp if decodedToken is null
+                const fiveMinutes = 5 * 60 * 1000;
+                const currentTime = new Date().getTime();
+
+                if (currentTime - parseInt(popupClosedTimestamp) < fiveMinutes) {
+                    setOpen(false);
+                } else {
+                    setOpen(true);
+                }
+            } else {
+                // Hide the popup if decodedToken is not null
+                setOpen(false);
             }
-        }
-    }, []);
+        }, delay);
+
+        // Cleanup the timeout to avoid memory leaks
+        return () => clearTimeout(timeoutId);
+
+    }, [decodedToken]);
 
     function Icon() {
         return (
@@ -51,12 +67,17 @@ export function Popup({customClass,headerTxt, bodyTxt}) {
                     <Typography variant="h5" color="white">
                         {headerTxt}
                     </Typography>
-                    <Typography color="white" variant="h6" className="mt-2 ">
-                        {bodyTxt}
-                    </Typography>
+                    <Typography
+                        color="white"
+                        variant="h6"
+                        className="mt-2"
+                        dangerouslySetInnerHTML={{__html: bodyTxt}}
+                    />
 
                 </Alert>
-            )}
-        </div>
-    );
+                )}
+
+</div>
+)
+;
 }
