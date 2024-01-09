@@ -84,7 +84,7 @@ export default function FilterHotelData() {
     };
 
     const handleTravelersIncrement = () => {
-        if (travelersCount < 8) {
+        if (travelersCount < 10) {
             setTravelersCount((prevCount) => prevCount + 1);
         } else {
             toast.error('Maximum travelers count reached!');
@@ -112,7 +112,6 @@ export default function FilterHotelData() {
     };
 
     useEffect(() => {
-        console.log('Filter Data:', filterData);
     }, [filterData]);
 
     const handleSearch = async () => {
@@ -122,14 +121,22 @@ export default function FilterHotelData() {
             endDate,
             travelersCount,
         };
+        console.log('Current Filter Params:', currentFilterParams);
         const filters = [];
+
         if (selectedCountry) filters.push(selectedCountry);
+
         let formattedStartDate = '';
         let formattedEndDate = '';
         if (startDate && endDate) {
-            const options = {day: '2-digit', month: '2-digit', year: 'numeric'};
-            formattedStartDate = startDate.toLocaleDateString('en-US', options);
-            formattedEndDate = endDate.toLocaleDateString('en-US', options);
+            // Format start date
+            const startDateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            formattedStartDate = startDate.toLocaleDateString('en-US', startDateOptions);
+
+            // Format end date
+            const endDateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            formattedEndDate = endDate.toLocaleDateString('en-US', endDateOptions);
+
             filters.push(`${formattedStartDate} - ${formattedEndDate}`);
         }
 
@@ -137,18 +144,19 @@ export default function FilterHotelData() {
         if (roomsCount) filters.push(`${roomsCount} Rooms`);
 
         setAppliedFilters(filters);
+
         if (prevFilterParams && JSON.stringify(currentFilterParams) === JSON.stringify(prevFilterParams)) {
             toast.error('Please select different filter criteria.');
         } else {
             try {
-                setFilterData([])
+                setFilterData([]);
                 const response = await axios.post(
                     'http://localhost:5000/getHotelsByFilter',
                     {
                         country: selectedCountry,
                         startDate: formattedStartDate,
                         endDate: formattedEndDate,
-                        travelersCount: travelersCount,
+                        travelersCount,
                     }
                 );
                 setFilterData(response.data);
@@ -160,6 +168,7 @@ export default function FilterHotelData() {
             }
         }
     };
+
 
 
     return (
@@ -212,7 +221,7 @@ export default function FilterHotelData() {
                                             onClick={handleTravelersIncrement}
                                             color="blue-gray"
                                             variant="outlined"
-                                            ripple="light"
+                                            ripple={true}
                                             size="sm"
                                             className="rounded-full px-2 py-2"
                                         >
@@ -225,7 +234,7 @@ export default function FilterHotelData() {
                                             onClick={handleTravelersDecrement}
                                             color="blue-gray"
                                             variant="outlined"
-                                            ripple="light"
+                                            ripple={true}
                                             size="sm"
                                             className="rounded-full px-2 py-2"
                                         >
@@ -243,7 +252,7 @@ export default function FilterHotelData() {
                                             onClick={handleRoomsIncrement}
                                             color="blue-gray"
                                             variant="outlined"
-                                            ripple="light"
+                                            ripple={true}
                                             size="sm"
                                             className="rounded-full px-2 py-2"
                                         >
@@ -256,7 +265,7 @@ export default function FilterHotelData() {
                                             onClick={handleRoomsDecrement}
                                             color="blue-gray"
                                             variant="outlined"
-                                            ripple="light"
+                                            ripple={true}
                                             size="sm"
                                             className="rounded-full px-2 py-2"
                                         >
@@ -271,14 +280,14 @@ export default function FilterHotelData() {
                         <Button
                             onClick={handleSearch}
                             color="gray"
-                            ripple="light"
+                            ripple={true}
                             variant="gradient"
                             className="w-[85%] h-10"
                         >
                             Filter
                         </Button>
                         <div className="flex items-center justify-center w-[15%]">
-                            <Button onClick={discardFilter} color="gray" ripple="light" variant="outlined"
+                            <Button onClick={discardFilter} color="gray" ripple={true} variant="outlined"
                                     className="h-10 w-10 p-0 m-0 flex items-center justify-center">
                                 <TrashIcon className="w-6 h-6 p-0 m-0"/>
                             </Button>

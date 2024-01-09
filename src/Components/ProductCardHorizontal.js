@@ -2,17 +2,22 @@ import {
     Card,
     CardHeader,
     CardBody,
-    Typography, Tooltip, Chip, Button,
+    Typography, Tooltip, Chip, Button, Dialog, DialogHeader, DialogBody, DialogFooter, IconButton,
 } from "@material-tailwind/react";
-import {CustomButton} from "./CustomButton";
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {getDecodedToken} from "./auth";
 import {StarIcon} from "@heroicons/react/20/solid";
 
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import toast from "react-hot-toast";
+
 export function ProductCardHorizontal({data}) {
     const decodedToken = getDecodedToken();
     const [hotelFeatures, setHotelFeatures] = useState([]);
+    const [openDialogIndex, setOpenDialogIndex] = useState(null);
 
     useEffect(() => {
         if (data && data.length > 0) {
@@ -127,6 +132,29 @@ export function ProductCardHorizontal({data}) {
         }
     };
 
+    // Image gallery states
+    const [open, setOpen] = React.useState(false);
+    const [isFavorite, setIsFavorite] = React.useState(false);
+
+    const handleOpen = (index) => {
+        setOpenDialogIndex(index);
+    };
+
+    const handleClose = () => {
+        setOpenDialogIndex(null);
+    };
+    //
+    const handleIsFavorite = () => {
+        decodedToken ? setIsFavorite((cur) => !cur) : toast.error("Please login to add your favorite hotel.");
+    }
+    const settings = {
+        dots: true,
+        fade: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1
+    };
     return (
         <div className="flex flex-col gap-4 w-full">
             {
@@ -137,13 +165,78 @@ export function ProductCardHorizontal({data}) {
                                 shadow={false}
                                 floated={false}
                                 className="m-0 md:w-2/5 w-full md:h-full h-40 shrink-0 md:rounded-r-none"
+                                onClick={() => handleOpen(index)}
                             >
                                 <img
-                                    src={item?.hotel_images}
+                                    src={item?.hotel_images[0]}
                                     alt="card-image"
                                     className="h-full w-full object-cover"
                                 />
                             </CardHeader>
+                            <Dialog size="lg" open={openDialogIndex === index} handler={handleClose}>
+                                <DialogHeader className="justify-between">
+                                    <Typography color="blue-gray" variant="h4">
+                                        {item?.hotel_name}
+                                    </Typography>
+                                    <div className="flex items-center gap-2">
+                                        <IconButton
+                                            variant="text"
+                                            size="sm"
+                                            color={isFavorite ? "red" : "blue-gray"}
+                                            onClick={handleIsFavorite}
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24"
+                                                fill="currentColor"
+                                                className="h-5 w-5"
+                                            >
+                                                <path
+                                                    d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/>
+                                            </svg>
+                                        </IconButton>
+                                    </div>
+                                </DialogHeader>
+                                <DialogBody children="">
+                                    <div className="w-full bg-slate-50 rounded-md">
+                                        <Slider {...settings}>
+                                            {
+                                                item?.hotel_images.map((image, index) => {
+                                                    return (
+                                                        <div key={index}>
+                                                            <img
+                                                                src={image}
+                                                                alt="card-image"
+                                                                className="h-[500px] w-full object-contain rounded"
+                                                            />
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </Slider>
+                                    </div>
+                                </DialogBody>
+                                <DialogFooter className="justify-between">
+                                    <Button color="red" variant="outlined" size="sm" rounded={false}
+                                            ripple={true} onClick={handleClose}>
+                                        Close
+                                    </Button>
+
+                                    <Link to={`/product/${item?.hotel_id}`}>
+                                        <Button
+                                            size="sm"
+                                            variant="outlined"
+                                            ripple={true}
+                                            color="purple"
+                                            className="mr-5 flex items-center"
+                                        >
+                                            Detail
+                                        </Button>
+                                    </Link>
+
+                                </DialogFooter>
+
+                            </Dialog>
                             <CardBody className="w-full flex justify-between items sm:gap-3 gap-1 py-4 px-2">
                                 <div className="flex flex-col sm:w-2/3 w-1/2">
                                     <div className="flex flex-col">
@@ -195,13 +288,15 @@ export function ProductCardHorizontal({data}) {
 
                                 <div className="flex flex-col justify-between items-end sm:w-1/3 w-1/2">
                                     <div className="flex flex-col gap-2 items-end">
-                                        <Chip value={"%"+item?.hotel_discount+ " Discount"} color="teal" className="normal-case"/>
+                                        <Chip value={"%" + item?.hotel_discount + " Discount"} color="teal"
+                                              className="normal-case"/>
                                         <div>
                                             <span className="text-sm line-through "> {item?.hotel_price}₺</span>
                                             <span
                                                 className="lg:text-2xl text-lg font-bold"> {parseFloat(item?.hotel_price - item?.hotel_price * item?.hotel_discount / 100).toLocaleString()} ₺</span>
                                         </div>
-                                        <Typography color="gray" variant="h6" className="text-right sm:text-[14px] text-[13px]">
+                                        <Typography color="gray" variant="h6"
+                                                    className="text-right sm:text-[14px] text-[13px]">
                                             The price includes taxes and fees for one night.
                                         </Typography>
 
@@ -248,7 +343,7 @@ export function ProductCardHorizontal({data}) {
                                     </div>
                                     <div className="my-1">
                                         <Button color="indigo" variant="outlined" size="sm" rounded={false}
-                                                ripple="light">
+                                                ripple={true}>
                                             <Link to={`/product/${item?.hotel_id}`}>
                                                 View Details
                                             </Link>
@@ -275,5 +370,6 @@ export function ProductCardHorizontal({data}) {
                 })
             }
         </div>
-    );
+    )
+        ;
 }

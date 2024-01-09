@@ -27,7 +27,7 @@ export default function Navbar() {
     const [loginData, setLoginData] = useState({});
 
     const [decodedToken, setDecodedToken] = useState(null);
-    console.log("decodedToken:", decodedToken)
+    // console.log("decodedToken:", decodedToken)
     const [lastActivity, setLastActivity] = useState(new Date().getTime());
 
     const openRegisterModal = () => {
