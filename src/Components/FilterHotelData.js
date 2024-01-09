@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 import axios from 'axios';
 import {
     Button,

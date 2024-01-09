@@ -4,12 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {PopupProvider} from "./Helpers/PopupContext";
+import {GoogleOAuthProvider} from "@react-oauth/google";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <PopupProvider>
+            <GoogleOAuthProvider clientId="731809491846-3nb76ilucghd2n1ulcrnjn726tqusdo3.apps.googleusercontent.com">
             <App/>
+            </GoogleOAuthProvider>
         </PopupProvider>
     </React.StrictMode>
 );

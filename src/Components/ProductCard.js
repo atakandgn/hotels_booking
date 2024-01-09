@@ -27,7 +27,7 @@ export default function ProductCard() {
 
 
     return (
-        <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-8">
+        <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-8 my-6">
             {
                 hotelData ? (
                     hotelData.hotels.map((product, index) => {

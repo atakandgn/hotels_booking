@@ -3,15 +3,16 @@ import { jwtDecode } from 'jwt-decode';
 
 export const getToken = () => {
     const token = localStorage.getItem('token');
-    // console.log("localStorage.getItem('token'):", token);
-    // console.log("decoded token:", jwtDecode(token));
     return token;
 };
 
 export const getDecodedToken = () => {
     const token = getToken();
     if (token) {
-        return jwtDecode(token);
+        const decodedToken = jwtDecode(token);
+        // Log the decoded token only when needed
+        console.log("decoded token:", decodedToken);
+        return decodedToken;
     }
     return null;
 };

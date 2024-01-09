@@ -56,7 +56,7 @@ const {Users, Coupons} = require("../helpers/sequelizemodels");
 
 router.post('/login', async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const {username, password} = req.body;
 
         const sequelize = await initializeSequelize();
         const usersModel = sequelize.define('Users', Users, {
@@ -69,7 +69,7 @@ router.post('/login', async (req, res) => {
         });
 
         // Correct the association alias
-        usersModel.belongsTo(couponsModel, { foreignKey: 'coupon_id', targetKey: 'coupon_id', as: 'coupon' });
+        usersModel.belongsTo(couponsModel, {foreignKey: 'coupon_id', targetKey: 'coupon_id', as: 'coupon'});
 
         // Check if the user exists
         const findUser = await usersModel.findOne({
@@ -89,7 +89,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).send('Invalid username or password');
         }
 
-        console.log("findUserATAKANTİTANNNNNNNNNNN:",findUser)
+        console.log("findUserATAKANTİTANNNNNNNNNNN:", findUser)
 
         // Check if the password is correct
         const isPasswordValid = await bcrypt.compare(password, findUser.password);
@@ -107,17 +107,17 @@ router.post('/login', async (req, res) => {
             gender: findUser.gender,
             phone: findUser.phone,
             coupon_rate: findUser.coupon ? findUser.coupon.coupon_discount : 5,
+            picture: findUser.gender === 1 ? "https://cdn-icons-png.flaticon.com/512/219/219969.png" : "https://cdn-icons-png.flaticon.com/512/4140/4140052.png",
         };
         const token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY);
 
         // Send the token in the response
-        return res.status(200).json({ token });
+        return res.status(200).json({token});
     } catch (error) {
         console.error('Error:', error);
         return res.status(500).send('Internal server error during login.');
     }
 });
-
 
 
 // Register Swagger Documentation
@@ -227,7 +227,7 @@ router.post('/register', async (req, res) => {
             return res.status(400).send(`Validation Error: ${error.details[0].message}`);
         }
 
-        const {name, surname, email, username, password, phone, gender, country, city, district,coupon_code} = value;
+        const {name, surname, email, username, password, phone, gender, country, city, district, coupon_code} = value;
 
         // Hash the password using bcrypt
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -273,6 +273,32 @@ router.post('/register', async (req, res) => {
     }
 });
 
+
+router.post('/googleAuth', async (req, res) => {
+    try {
+        const { error, value } = Joi.object({
+            name: Joi.string().required(),
+            picture: Joi.string().optional(),
+            coupon_rate: Joi.number().integer().min(1).max(100).required(),
+        }).validate(req.body);
+        const {name, coupon_rate,picture} = value;
+        if (error) {
+            return res.status(400).send(`Validation Error: ${error.details[0].message}`);
+        }
+
+        const tokenPayload = {
+            name: name,
+            coupon_rate: coupon_rate,
+            picture:picture
+        };
+        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET_KEY);
+        return res.status(200).json({token});
+
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).send('Internal server error during login.');
+    }
+});
 
 
 module.exports = router;

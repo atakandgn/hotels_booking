@@ -12,12 +12,12 @@ import {
 import {Modal} from "./Modal";
 import countriesData from '../countries+states+cities.json';
 import {Link, useNavigate} from "react-router-dom";
-import {Drawler} from "./Drawler";
 import axios from 'axios';
 import toast from "react-hot-toast";
 import {ArrowLeftStartOnRectangleIcon} from "@heroicons/react/24/outline";
 import SelectBox from "./SelectBox";
 import {getDecodedToken} from "./auth";
+import GoogleAuth from "./GooglAuth";
 
 export default function Navbar() {
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -212,8 +212,16 @@ export default function Navbar() {
     };
 
 
+    const handleLoginSuccess = (decodedUser) => {
+        console.log('Login Successful decodedUser:', decodedUser);
+    };
+
+    const handleLoginError = (errorMessage) => {
+        console.error('Login Error:', errorMessage);
+    };
+
     return (
-        <div className="flex justify-between items-center w-full h-[100px] px-12">
+        <div className="container mx-auto flex justify-between items-center w-full h-[100px]">
             <Link to="/">
                 <img className="object-contain lg:w-[300px] lg:h-[75px] w-[150px] h-[75px]"
                      src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Hotels.com_logo.svg/2560px-Hotels.com_logo.svg.png"
@@ -224,7 +232,16 @@ export default function Navbar() {
                     <div className="flex gap-4 items-center">
                         <Popover placement="bottom">
                             <PopoverHandler>
-                                <Button>Welcome, <i>{storageToken.name} {storageToken.surname}</i></Button>
+                                <Button className="flex items-center gap-4 py-2.5">
+                                    <img className="w-12 h-12 rounded-full border border-white" src={decodedToken?.picture}
+                                            alt=""/>
+                                    <div>
+                                        <Typography variant="h6">Welcome,</Typography>
+                                        <Typography variant="small" color="gray" className="font-normal">
+                                            <i>{storageToken?.name} {storageToken?.surname}</i>
+                                        </Typography>
+                                    </div>
+                                </Button>
                             </PopoverHandler>
                             <PopoverContent className="flex items-center justify-center gap-2 cursor-pointer"
                                             onClick={logOut}>
@@ -454,6 +471,10 @@ export default function Navbar() {
                             </Typography>
                         </div>
                         <Button onClick={handleLogin}>Sign In</Button>
+                        <GoogleAuth
+                            onLoginSuccess={handleLoginSuccess}
+                            onLoginError={handleLoginError}
+                        />
                     </div>
                 }
             />
