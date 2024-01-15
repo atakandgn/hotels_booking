@@ -11,7 +11,7 @@ export default function ProductCard() {
     const [hotelData, setHotelData] = useState({hotels: []});
     const getHotels = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/getHotels');
+            const response = await axios.get('https://hotelapi-1dx9.onrender.com/getHotels');
             setHotelData(response.data);
 
 

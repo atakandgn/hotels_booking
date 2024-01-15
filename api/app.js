@@ -1,8 +1,6 @@
 // app.js
 const express = require('express');
 const sql = require('mysql');
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
 const sass = require('node-sass');
 const path = require('path');
@@ -264,15 +262,6 @@ app.get('/', (req, res) => {
                 <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
             </head>
             <body>
-                <div class="content-item">
-                    <div class="overlay"></div>
-                    <div class="corner-overlay-content">Info</div>
-                    <div class="overlay-content">
-                        <h2>Welcome to the HealthCare PRO API Server!</h2>
-                        <p>Please use the <a href="/api-docs" target="_blank">/api-docs</a> endpoint to view the documentation.</p>
-                    </div>
-                </div>
-                
                 <div class="socials">
                     <ul>
                         <li>
@@ -303,28 +292,6 @@ app.get('/', (req, res) => {
 
     res.send(htmlResponse);
 });
-
-// Swagger Documentation Setup
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Hotels Booking API',
-            version: '1.0.0',
-            description: 'API for an hotels booking system',
-            contact: {
-                name: 'Atakan Doğan',
-                email: 'atakandogan.info@gmail.com',
-                url: 'https://github.com/atakandgn/hotels_booking'
-            },
-        },
-    },
-    apis: ['app.js'],
-};
-
-
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 

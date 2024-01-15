@@ -7,53 +7,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {Users, Coupons} = require("../helpers/sequelizemodels");
 
-
-/**
- * @swagger
- * /login:
- *   post:
- *     summary: User login.
- *     description: |
- *       This endpoint allows registered users to log in by providing their username and password.
- *       If the provided credentials are valid, a JWT token is generated and returned in the response.
- *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *                 description: The username of the user.
- *                 example: johndoe123
- *               password:
- *                 type: string
- *                 description: The password of the user.
- *                 example: securePassword123
- *             required:
- *               - username
- *               - password
- *     responses:
- *       '200':
- *         description: Successful login. Returns a JWT token.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   description: JWT token for authentication.
- *       '401':
- *         description: Invalid username or password.
- *       '500':
- *         description: Internal server error during login.
- */
-
-
 router.post('/login', async (req, res) => {
     try {
         const {username, password} = req.body;
@@ -88,9 +41,6 @@ router.post('/login', async (req, res) => {
         if (!findUser) {
             return res.status(401).send('Invalid username or password');
         }
-
-        console.log("findUserATAKANTİTANNNNNNNNNNN:", findUser)
-
         // Check if the password is correct
         const isPasswordValid = await bcrypt.compare(password, findUser.password);
         if (!isPasswordValid) {
@@ -119,92 +69,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-
-// Register Swagger Documentation
-/**
- * @swagger
- * /register:
- *   post:
- *     summary: Register a new user.
- *     description: |
- *       This endpoint allows users to register a new account by providing required information.
- *       The provided password is hashed before being stored.
- *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 description: The name of the new user.
- *                 example: John
- *               surname:
- *                 type: string
- *                 description: The surname of the new user.
- *                 example: Doe
- *               email:
- *                 type: string
- *                 format: email
- *                 description: The email address of the new user.
- *                 example: john.doe@example.com
- *               username:
- *                 type: string
- *                 description: The desired username for the new user.
- *                 example: johndoe123
- *               password:
- *                 type: string
- *                 description: The password for the new user (at least 8 characters, one uppercase, one lowercase and one number.).
- *                 example: securePassword123
- *               passwordConfirm:
- *                 type: string
- *                 description: Confirm the password (must match the 'password' field).
- *                 example: securePassword_123
- *               phone:
- *                 type: string
- *                 description: The phone number of the new user.
- *                 example: +1234567890
- *               gender:
- *                 type: integer
- *                 description: The gender of the new user (1=XX, 2=XY).
- *                 example: 2
- *                country:
- *                  type: string
- *                  description: The country of the new user.
- *                  example: Turkey
- *                city:
- *                  type: string
- *                  description: The city of the new user.
- *                  example: İzmir
- *                district:
- *                  type: string
- *                  description: The district of the new user.
- *                  example: Karşıyaka
- *             required:
- *               - name
- *               - surname
- *               - email
- *               - username
- *               - password
- *               - passwordConfirm
- *               - phone
- *               - gender
- *               - country
- *               - city
- *               - district
- *     responses:
- *       '200':
- *         description: User created successfully.
- *       '400':
- *         description: Validation error or duplicate username/email/phone.
- *       '500':
- *         description: Internal server error during registration.
- */
-
-// Register endpoint
 router.post('/register', async (req, res) => {
     try {
         const {error, value} = Joi.object({
@@ -219,7 +83,7 @@ router.post('/register', async (req, res) => {
             country: Joi.string().required(),
             city: Joi.string().required(),
             district: Joi.string().required(),
-            coupon_code: Joi.string().optional().default(1),
+            coupon_code: Joi.string().optional().default("DEFAULT"),
 
         }).validate(req.body);
 
@@ -241,11 +105,18 @@ router.post('/register', async (req, res) => {
             timestamps: false,
             freezeTableName: true,
         });
-        const coupon = await couponsModel.findOne({
+        let coupon = await couponsModel.findOne({
             where: {
                 coupon_code: coupon_code,
             },
         });
+        if (!coupon) {
+            coupon = await couponsModel.findOne({
+                where: {
+                    coupon_code: "DEFAULT",
+                },
+            });
+        }
 
         // Create a new user
         const newUser = await usersModel.create({

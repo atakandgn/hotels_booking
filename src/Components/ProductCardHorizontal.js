@@ -156,7 +156,7 @@ export function ProductCardHorizontal({data}) {
         slidesToScroll: 1
     };
     return (
-        <div className="flex flex-col gap-4 w-full">
+        <div className="flex flex-col gap-4 w-full py-4">
             {
                 data.map((item, index) => {
                     return (
@@ -164,13 +164,13 @@ export function ProductCardHorizontal({data}) {
                             <CardHeader
                                 shadow={false}
                                 floated={false}
-                                className="m-0 md:w-2/5 w-full md:h-full h-40 shrink-0 md:rounded-r-none"
+                                className="m-0 md:w-2/5 w-full md:h-full h-40 shrink-0 md:rounded-r-none cursor-zoom-in"
                                 onClick={() => handleOpen(index)}
                             >
                                 <img
                                     src={item?.hotel_images[0]}
                                     alt="card-image"
-                                    className="h-full w-full object-cover"
+                                    className="h-full w-full object-cover "
                                 />
                             </CardHeader>
                             <Dialog size="lg" open={openDialogIndex === index} handler={handleClose}>

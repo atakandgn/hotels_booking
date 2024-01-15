@@ -29,7 +29,7 @@ export default function HotelDetail() {
     useEffect(() => {
         const getHotelDetail = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/getHotelDetail/${hotelID}`);
+                const response = await axios.get(`https://hotelapi-1dx9.onrender.com/getHotelDetail/${hotelID}`);
                 setHotelData(response.data);
             } catch (error) {
                 console.error(error?.message);

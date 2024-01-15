@@ -152,7 +152,7 @@ const Booking = {
 
 }
 
-const Coupons=  {
+const Coupons = {
     coupon_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -184,11 +184,9 @@ const Coupons=  {
     },
 }
 
-
-
 module.exports = {
     Users,
     Hotels,
     Booking,
-    Coupons
+    Coupons,
 };

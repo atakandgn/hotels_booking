@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+# Hotel Booking System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains the backend code for a Hotel Booking System built using Node.js, Express, and Sequelize as the ORM for PostgreSQL. The system includes features such as user authentication, hotel information retrieval, and booking functionality.
 
-## Available Scripts
+## Project Structure
 
-In the project directory, you can run:
+### Authentication Routes (`authRoutes.js`)
 
-### `npm start`
+- **`POST /login`**: Handles user login with username and password. Validates user credentials and generates a JWT token upon successful login.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **`POST /register`**: Handles user registration, validating user input, hashing the password, and creating a new user in the database.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **`POST /googleAuth`**: Handles Google authentication, validating the incoming data, creating a JWT token, and returning it.
 
-### `npm test`
+### Hotel Routes (`hotelRoutes.js`)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **`GET /getHotels`**: Retrieves a list of all hotels with their basic information.
 
-### `npm run build`
+- **`GET /getHotelDetail/:id`**: Retrieves detailed information about a specific hotel based on the provided `hotelId`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **`POST /getHotelsByFilter`**: Filters hotels based on country, start date, end date, and traveler count. Ensures that hotels meet the specified criteria for availability.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Authentication Middleware (`authenticateToken.js`)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+A middleware function to authenticate JWT tokens. It checks for a valid token in the request header and decodes it to verify the user's identity.
 
-### `npm run eject`
+### Sequelize Helper (`sequelize.js`)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **`initializeSequelize`**: Initializes the Sequelize instance, connects to the PostgreSQL database, and exports the Sequelize instance. It also handles SSL configuration for secure connections.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Database Models and Associations (`sequelizemodels.js`)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Users Model
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Represents user details such as name, email, username, and password.
+- Contains information about the user's location, including country, city, and district.
+- Associates with the Coupons model through the `coupon_id`.
 
-## Learn More
+### Hotels Model
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Represents information about hotels, including name, description, price, and features.
+- Contains details about the location of the hotel, such as country, address, latitude, and longitude.
+- Associates with the Booking model through the `hotel_id`.
+- Utilizes a `hotel_discount` field to provide discounts on hotel prices.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Booking Model
 
-### Code Splitting
+- Represents a booking made by a user for a particular hotel.
+- Includes details such as the start date, end date, and the number of travelers.
+- Associates with both Users and Hotels models through `user_id` and `hotel_id` respectively.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Coupons Model
 
-### Analyzing the Bundle Size
+- Represents discount coupons that users can have.
+- Contains information about the coupon code, discount percentage, limit, and validity period.
+- Associates with the Users model through the `coupon_id`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+These associations create a relational structure among Users, Hotels, Booking, and Coupons, allowing for seamless querying and retrieval of related data. For example, a booking is associated with both a user and a hotel, and users may have associated coupons.
 
-### Making a Progressive Web App
+## Database Tables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The database contains the following tables:
 
-### Advanced Configuration
+- **`users`**: 
+- **`hotels`**:
+- **`bookings`**:
+- **`coupons`**:
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+![img_4.png](img_4.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+## Live Demo
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Visit the [live demo](https://hotelclient-v68w.onrender.com/) to explore the Hotel Booking System. The system integrates Google authentication for a seamless login experience.
 
-### `npm run build` fails to minify
+## How to Use
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Clone the repository.
+2. Install dependencies using `npm install`.
+3. Configure environment variables in a `.env` file.
+4. Run the application using `npm start`.
+
+Note: Ensure that you have Node.js and npm installed on your machine.
+
+Feel free to customize and extend the code to fit your specific project requirements. If you encounter any issues or have questions, please refer to the documentation or open an issue in the repository.

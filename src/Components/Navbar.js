@@ -19,6 +19,7 @@ import SelectBox from "./SelectBox";
 import {getDecodedToken} from "./auth";
 import GoogleAuth from "./GooglAuth";
 
+import mainLogo from '../../src/Helpers/mainLogo.png';
 export default function Navbar() {
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -60,7 +61,7 @@ export default function Navbar() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/login', {
+            const response = await axios.post('https://hotelapi-1dx9.onrender.com/login', {
                 username: loginData.username,
                 password: loginData.password,
             });
@@ -165,7 +166,7 @@ export default function Navbar() {
     const registerUser = async () => {
         try {
             const response = await axios.post(
-                'http://localhost:5000/register',
+                'https://hotelapi-1dx9.onrender.com/register',
                 {
                     name: registerData.name,
                     surname: registerData.surname,
@@ -186,6 +187,8 @@ export default function Navbar() {
                     },
                 }
             );
+
+            console.log("response: ", response)
 
             if (response.status === 200) {
                 setIsRegisterModalOpen(false);
@@ -222,9 +225,9 @@ export default function Navbar() {
 
     return (
         <div className="container mx-auto flex justify-between items-center w-full h-[100px]">
-            <Link to="/">
+            <Link to="/" className="hover:scale-95 transition duration-300 hover:duration-200">
                 <img className="object-contain lg:w-[300px] lg:h-[75px] w-[150px] h-[75px]"
-                     src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Hotels.com_logo.svg/2560px-Hotels.com_logo.svg.png"
+                     src={mainLogo}
                      alt=""/>
             </Link>
             <div className="flex items-center gap-4">
@@ -301,8 +304,16 @@ export default function Navbar() {
                                 variant="standard"
                                 label="Phone Number"
                                 placeholder="Phone Number"
-                                onChange={(e) => setRegisterData({...registerData, phone: e.target.value})}
+                                type="tel"
+                                value={registerData.phone}
+                                onChange={(e) => {
+                                    const inputValue = e.target.value;
+                                    if (!isNaN(inputValue) || inputValue === '') {
+                                        setRegisterData({...registerData, phone: inputValue});
+                                    }
+                                }}
                             />
+
                             <Select
                                 variant="standard"
                                 label="Gender"
@@ -356,7 +367,7 @@ export default function Navbar() {
                                 variant="standard"
                                 label="Enter Coupon"
                                 value={registerData.coupon_code}
-                                onChange={(e) => setRegisterData({coupon_code: e.target.value})}
+                                onChange={(e) => setRegisterData({...registerData, coupon_code: e.target.value})}
                             />
                         </div>
 
