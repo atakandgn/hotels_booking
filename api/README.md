@@ -1,91 +1,87 @@
-# Patient Management System
+# Hotel Booking System
 
-## Introduction
+This repository contains the backend code for a Hotel Booking System built using Node.js, Express, and Sequelize as the ORM for PostgreSQL. The system includes features such as user authentication, hotel information retrieval, and booking functionality.
 
-A simple Patient Management System for managing patient records.
+## Project Structure
 
-## Features
+### Authentication Routes (`authRoutes.js`)
 
-- Search patients based on various criteria
-- Add new patients to the system
-- Update patient information
-- View all patients with pagination support
-- Delete patient records
-- Admin authentication with JWT token
+- **`POST /login`**: Handles user login with username and password. Validates user credentials and generates a JWT token upon successful login.
 
-## Getting Started
+- **`POST /register`**: Handles user registration, validating user input, hashing the password, and creating a new user in the database.
 
-### Prerequisites
+- **`POST /googleAuth`**: Handles Google authentication, validating the incoming data, creating a JWT token, and returning it.
 
-Before running the project, make sure you have the following installed:
+### Hotel Routes (`hotelRoutes.js`)
 
-- Node.js
-- npm
-- MySQL
+- **`GET /getHotels`**: Retrieves a list of all hotels with their basic information.
 
-### Installation
+- **`GET /getHotelDetail/:id`**: Retrieves detailed information about a specific hotel based on the provided `hotelId`.
 
-1. **Clone the repository:**
+- **`POST /getHotelsByFilter`**: Filters hotels based on country, start date, end date, and traveler count. Ensures that hotels meet the specified criteria for availability.
 
-    ```bash
-    git clone https://github.com/atakandgn/admin_patient_system
-    cd patient-management-system
-    ```
+### Authentication Middleware (`authenticateToken.js`)
 
-2. **Install dependencies:**
+A middleware function to authenticate JWT tokens. It checks for a valid token in the request header and decodes it to verify the user's identity.
 
-    ```bash
-    npm install
-    ```
+### Sequelize Helper (`sequelize.js`)
 
-3. **Set up your MySQL database:**
+- **`initializeSequelize`**: Initializes the Sequelize instance, connects to the PostgreSQL database, and exports the Sequelize instance. It also handles SSL configuration for secure connections.
 
-    Update the configuration in `config/config.js` with your database credentials.
+## Database Models and Associations (`sequelizemodels.js`)
 
-4. **Run the application:**
+### Users Model
 
-    ```bash
-    npm start
-    ```
+- Represents user details such as name, email, username, and password.
+- Contains information about the user's location, including country, city, and district.
+- Associates with the Coupons model through the `coupon_id`.
 
-## Usage
+### Hotels Model
 
-Once the application is set up, you can use the provided endpoints to interact with the Patient Management System.
+- Represents information about hotels, including name, description, price, and features.
+- Contains details about the location of the hotel, such as country, address, latitude, and longitude.
+- Associates with the Booking model through the `hotel_id`.
+- Utilizes a `hotel_discount` field to provide discounts on hotel prices.
 
-## Endpoints
+### Booking Model
 
-### Authentication
+- Represents a booking made by a user for a particular hotel.
+- Includes details such as the start date, end date, and the number of travelers.
+- Associates with both Users and Hotels models through `user_id` and `hotel_id` respectively.
 
-- **Admin Login:** `POST /login`
-  Authenticate and generate a JWT token for admin login.
+### Coupons Model
 
-- **Admin Registration:** `POST /register`
-  Register a new admin.
+- Represents discount coupons that users can have.
+- Contains information about the coupon code, discount percentage, limit, and validity period.
+- Associates with the Users model through the `coupon_id`.
 
-### Patient Management
+These associations create a relational structure among Users, Hotels, Booking, and Coupons, allowing for seamless querying and retrieval of related data. For example, a booking is associated with both a user and a hotel, and users may have associated coupons.
 
-- **Add Patient:** `POST /add-patient`
-  Add a new patient (Authentication required)
+## Database Tables
 
-- **Update Patient:** `PUT /update-patient/{patientId}`
-  Update patient information (Authentication required)
+The database contains the following tables:
 
-- **Search Patient:** `GET /search-patient`
-  Search for patients based on specified criteria.
+- **`users`**:
+- **`hotels`**:
+- **`bookings`**:
+- **`coupons`**:
+  ![img_1.png](img_1.png)
+  ![img_2.png](img_2.png)
+  ![img_3.png](img_3.png)
+  ![img_4.png](img_4.png)
 
-- **View All Patients:** `GET /view-all-patients`
-  Retrieve all patients with pagination.
 
-- **Delete Patient:** `DELETE /delete-patient/{patientId}`
-  Delete a patient based on patient ID (Authentication required).
+## Live Demo
 
-## Swagger Documentation
+Visit the [live demo](https://hotelclient-v68w.onrender.com/) to explore the Hotel Booking System. The system integrates Google authentication for a seamless login experience.
 
-The Swagger documentation for the API endpoints is available at [Swagger Documentation](#swagger-documentation).
+## How to Use
 
-## Contributing
+1. Clone the repository.
+2. Install dependencies using `npm install`.
+3. Configure environment variables in a `.env` file.
+4. Run the application using `npm start`.
 
-Contributions are welcome! If you find any issues or want to contribute to the project, please open a pull request or submit an issue.
+Note: Ensure that you have Node.js and npm installed on your machine.
 
-### For communication
--  Reach out to atakandogan.info@gmail.com or [LinkedIn](https://www.linkedin.com/in/atakandoan/) 
+Feel free to customize and extend the code to fit your specific project requirements. If you encounter any issues or have questions, please refer to the documentation or open an issue in the repository.
