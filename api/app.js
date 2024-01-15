@@ -27,10 +27,11 @@ app.listen(port, () => {
 // Root endpoint
 app.get('/', (req, res) => {
     // SCSS code
-    // background: url(/bannertkn.png) no-repeat center center ;
+
     const scssCode = `
             .content-item {
-
+                // image in src > helpers > mainLogo.png
+                background: url(./Helpers/mainLogo.png) no-repeat center center ;
                 background-size: cover;
                 background-position: center;
                 height: 300px;
