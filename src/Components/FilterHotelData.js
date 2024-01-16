@@ -152,7 +152,7 @@ export default function FilterHotelData() {
             try {
                 setFilterData([]);
                 const response = await axios.post(
-                    'https://hotelapi-1dx9.onrender.com/getHotelsByFilter',
+                    'http://localhost:5000/getHotelsByFilter',
                     {
                         country: selectedCountry,
                         startDate: formattedStartDate,

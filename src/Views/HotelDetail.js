@@ -29,7 +29,7 @@ export default function HotelDetail() {
     useEffect(() => {
         const getHotelDetail = async () => {
             try {
-                const response = await axios.get(`https://hotelapi-1dx9.onrender.com/getHotelDetail/${hotelID}`);
+                const response = await axios.get(`http://localhost:5000/getHotelDetail/${hotelID}`);
                 setHotelData(response.data);
             } catch (error) {
                 console.error(error?.message);
@@ -77,7 +77,7 @@ export default function HotelDetail() {
             case 0:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Denize Sıfır">
+                        <Tooltip content="Near the sea">
                             <i className="fa-solid fa-lg fa-water cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -85,7 +85,7 @@ export default function HotelDetail() {
             case 1:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Havuzlu Otel">
+                        <Tooltip content="Pool">
                             <i className="fa-solid fa-lg fa-water-ladder cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -93,7 +93,7 @@ export default function HotelDetail() {
             case 2:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Restorant">
+                        <Tooltip content="Breakfast">
                             <i className="fa-solid fa-lg fa-mug-saucer cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -101,7 +101,7 @@ export default function HotelDetail() {
             case 3:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Wifi">
+                        <Tooltip content="Free Wifi">
                             <i className="fa-solid fa-lg fa-wifi cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -125,7 +125,7 @@ export default function HotelDetail() {
             case 6:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Otopark">
+                        <Tooltip content="Parking">
                             <i className="fa-solid fa-lg fa-parking cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -133,7 +133,7 @@ export default function HotelDetail() {
             case 7:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Klima">
+                        <Tooltip content="Air Conditioner">
                             <i className="fa-solid fa-lg fa-fan cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -141,7 +141,7 @@ export default function HotelDetail() {
             case 8:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Engelli Dostu">
+                        <Tooltip content="Disabled Access">
                             <i className="fa-solid fa-lg fa-wheelchair cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -149,7 +149,7 @@ export default function HotelDetail() {
             case 9:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Çocuk Dostu">
+                        <Tooltip content="Child Friendly">
                             <i className="fa-solid fa-lg fa-child cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -157,7 +157,7 @@ export default function HotelDetail() {
             case 10:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Kumarhane">
+                        <Tooltip content="Casino">
                             <i className="fa-solid fa-lg fa-dice-d20 cursor-pointer"></i>
                         </Tooltip>
                     </div>

@@ -20,7 +20,7 @@ const GoogleAuth = ({ onLoginSuccess, onLoginError }) => {
 
     const sendTokenRequest = async (name, coupon_rate,picture) => {
         try {
-            const response = await axios.post('https://hotelapi-1dx9.onrender.com/googleAuth', {
+            const response = await axios.post('http://localhost:5000/googleAuth', {
                 name,
                 coupon_rate,
                 picture

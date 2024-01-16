@@ -81,8 +81,8 @@ router.post('/register', async (req, res) => {
             phone: Joi.string().required(),
             gender: Joi.number().integer().min(1).max(2).required(), // 1=XX, 2=XY
             country: Joi.string().required(),
-            city: Joi.string().required(),
-            district: Joi.string().required(),
+            city: Joi.string().optional(),
+            district: Joi.string().optional(),
             coupon_code: Joi.string().optional().default("DEFAULT"),
 
         }).validate(req.body);
@@ -128,7 +128,7 @@ router.post('/register', async (req, res) => {
             phone,
             gender,
             country,
-            city,
+            city : city ? city : "-",
             district: district ? district : "-",
             coupon_id: coupon ? coupon.coupon_id : 1,
         });

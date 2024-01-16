@@ -34,7 +34,7 @@ export function ProductCardHorizontal({data}) {
             case 0:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Denize Sıfır">
+                        <Tooltip content="Near the sea">
                             <i className="fa-solid fa-lg fa-water cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -42,7 +42,7 @@ export function ProductCardHorizontal({data}) {
             case 1:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Havuzlu Otel">
+                        <Tooltip content="Pool">
                             <i className="fa-solid fa-lg fa-water-ladder cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -50,7 +50,7 @@ export function ProductCardHorizontal({data}) {
             case 2:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Restorant">
+                        <Tooltip content="Breakfast">
                             <i className="fa-solid fa-lg fa-mug-saucer cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -58,7 +58,7 @@ export function ProductCardHorizontal({data}) {
             case 3:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Wifi">
+                        <Tooltip content="Free Wifi">
                             <i className="fa-solid fa-lg fa-wifi cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -82,7 +82,7 @@ export function ProductCardHorizontal({data}) {
             case 6:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Otopark">
+                        <Tooltip content="Parking">
                             <i className="fa-solid fa-lg fa-parking cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -90,7 +90,7 @@ export function ProductCardHorizontal({data}) {
             case 7:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Klima">
+                        <Tooltip content="Air Conditioner">
                             <i className="fa-solid fa-lg fa-fan cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -98,7 +98,7 @@ export function ProductCardHorizontal({data}) {
             case 8:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Engelli Dostu">
+                        <Tooltip content="Disabled Access">
                             <i className="fa-solid fa-lg fa-wheelchair cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -106,7 +106,7 @@ export function ProductCardHorizontal({data}) {
             case 9:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Çocuk Dostu">
+                        <Tooltip content="Child Friendly">
                             <i className="fa-solid fa-lg fa-child cursor-pointer"></i>
                         </Tooltip>
                     </div>
@@ -114,7 +114,7 @@ export function ProductCardHorizontal({data}) {
             case 10:
                 return (
                     <div key={feature} className="flex items-center gap-2">
-                        <Tooltip content="Kumarhane">
+                        <Tooltip content="Casino">
                             <i className="fa-solid fa-lg fa-dice-d20 cursor-pointer"></i>
                         </Tooltip>
                     </div>

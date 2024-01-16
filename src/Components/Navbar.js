@@ -20,6 +20,7 @@ import {getDecodedToken} from "./auth";
 import GoogleAuth from "./GooglAuth";
 
 import mainLogo from '../../src/Helpers/mainLogo.png';
+
 export default function Navbar() {
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -61,7 +62,7 @@ export default function Navbar() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('https://hotelapi-1dx9.onrender.com/login', {
+            const response = await axios.post('http://localhost:5000/login', {
                 username: loginData.username,
                 password: loginData.password,
             });
@@ -163,10 +164,51 @@ export default function Navbar() {
         coupon_code: '',
     });
 
+
+
     const registerUser = async () => {
         try {
+            if (!registerData?.name) {
+                toast.error('Please enter your name!');
+                return;
+            }
+            if (!registerData?.surname) {
+                toast.error('Please enter your surname!');
+                return;
+            }
+            if (!registerData?.email) {
+                toast.error('Please enter your email!');
+                return;
+            }
+            if (!registerData?.username) {
+                toast.error('Please enter your username!');
+                return;
+            }
+            if (!registerData?.phone) {
+                toast.error('Please enter your phone number!');
+                return;
+            }
+            if (!registerData.gender){
+                toast.error('Please select your gender!');
+            }
+            if (!selectedCountry) {
+                toast.error('Please select your country!');
+                return;
+            }
+            if (!registerData?.password) {
+                toast.error('Please enter your password!');
+                return;
+            }
+            if (!registerData?.passwordConfirm) {
+                toast.error('Please enter your password again!');
+                return;
+            }
+            if (registerData?.password !== registerData?.passwordConfirm) {
+                toast.error('Passwords do not match!');
+                return;
+            }
             const response = await axios.post(
-                'https://hotelapi-1dx9.onrender.com/register',
+                'http://localhost:5000/register',
                 {
                     name: registerData.name,
                     surname: registerData.surname,
@@ -177,8 +219,8 @@ export default function Navbar() {
                     password: registerData.password,
                     passwordConfirm: registerData.passwordConfirm,
                     country: selectedCountry,
-                    city: selectedCity,
-                    district: selectedDistrict,
+                    city: selectedCity ? selectedCity : "-",
+                    district: selectedDistrict ? selectedDistrict : "-",
                     coupon_code: registerData.coupon_code ? registerData.coupon_code : "DEFAULT",
                 },
                 {
@@ -236,8 +278,9 @@ export default function Navbar() {
                         <Popover placement="bottom">
                             <PopoverHandler>
                                 <Button className="flex items-center gap-4 py-2.5">
-                                    <img className="w-12 h-12 rounded-full border border-white" src={decodedToken?.picture}
-                                            alt=""/>
+                                    <img className="w-12 h-12 rounded-full border border-white"
+                                         src={decodedToken?.picture}
+                                         alt=""/>
                                     <div>
                                         <Typography variant="h6">Welcome,</Typography>
                                         <Typography variant="small" color="gray" className="font-normal">
