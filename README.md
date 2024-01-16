@@ -1,6 +1,6 @@
 # Hotel Booking System
 
-This repository contains the backend code for a Hotel Booking System built using Node.js, Express, and Sequelize as the ORM for PostgreSQL. The system includes features such as user authentication, hotel information retrieval, and booking functionality.
+This repository contains the backend code for a Hotel Booking System built using Node.js, Express, and Sequelize as the ORM for PostgreSQL. The system includes features such as user authentication, hotel information retrieval, and booking functionality.The Material-Tailwind components library has been employed to enhance the user interface and streamline the development process.
 
 ## Project Demo
 ![hotelsystemfully](https://github.com/atakandgn/hotels_booking/assets/108396649/3aad0fa5-8fd5-4b40-9263-d69854322d40)
