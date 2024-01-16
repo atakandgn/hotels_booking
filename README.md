@@ -2,6 +2,13 @@
 
 This repository contains the backend code for a Hotel Booking System built using Node.js, Express, and Sequelize as the ORM for PostgreSQL. The system includes features such as user authentication, hotel information retrieval, and booking functionality.
 
+
+
+https://github.com/atakandgn/hotels_booking/assets/108396649/81a3f11d-c162-41e2-b83d-16bfa294e5cc
+
+
+
+
 ## Project Structure
 
 ### Authentication Routes (`authRoutes.js`)
